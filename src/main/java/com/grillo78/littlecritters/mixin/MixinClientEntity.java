@@ -13,8 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Entity.class)
 public abstract class MixinClientEntity {
 
-    private static int RENDER_DISTANCE = 500;
-
     @OnlyIn(Dist.CLIENT)
     @Inject(method = "Lnet/minecraft/entity/Entity;isInRangeToRenderDist(D)Z", at = @At("RETURN"), cancellable = true)
     public void isInRangeToRenderDist(double distance, CallbackInfoReturnable callbackInfoReturnable){
