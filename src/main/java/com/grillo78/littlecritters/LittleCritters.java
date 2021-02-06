@@ -2,6 +2,7 @@ package com.grillo78.littlecritters;
 
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntitySize;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -38,7 +39,7 @@ public class LittleCritters
     }
 
     private void onSizeChange(EntityEvent.Size event){
-        if(event.getEntity() instanceof BeeEntity || event.getEntity() instanceof SilverfishEntity){
+        if(event.getEntity().getType() == EntityType.BEE || event.getEntity().getType() == EntityType.SILVERFISH){
             event.setNewSize(new EntitySize(0.05f,0.025f, true));
             event.setNewEyeHeight(0.05F);
         }
@@ -46,7 +47,7 @@ public class LittleCritters
 
     private void onPreEntityRender(RenderLivingEvent.Pre event){
         event.getMatrixStack().push();
-        if(event.getEntity() instanceof BeeEntity || event.getEntity() instanceof SilverfishEntity){
+        if(event.getEntity().getType() == EntityType.BEE || event.getEntity().getType() == EntityType.SILVERFISH){
             event.getRenderer().shadowSize *= 0.05F;
             event.getMatrixStack().scale(0.05F,0.05F,0.05F);
         }
@@ -57,8 +58,8 @@ public class LittleCritters
     }
 
     private void onEntityJoinWorld(EntityJoinWorldEvent event){
-        if(event.getEntity() instanceof BeeEntity || event.getEntity() instanceof SilverfishEntity){
-            if(event.getEntity() instanceof SilverfishEntity){
+        if(event.getEntity().getType() == EntityType.BEE || event.getEntity().getType() == EntityType.SILVERFISH){
+            if(event.getEntity().getType() == EntityType.SILVERFISH){
                 ((SilverfishEntity)event.getEntity()).targetSelector.goals.clear();
             }
             setAttribute(((LivingEntity)event.getEntity()),"custom_max_health",Attributes.MAX_HEALTH,UUID.fromString("cbc6c4d8-03e2-4e7e-bcdf-fa9266f33195"),-(((CreatureEntity) event.getEntity()).getHealth()-1), AttributeModifier.Operation.ADDITION);

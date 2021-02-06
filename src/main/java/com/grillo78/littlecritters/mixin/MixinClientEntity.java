@@ -1,6 +1,7 @@
 package com.grillo78.littlecritters.mixin;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.monster.SilverfishEntity;
 import net.minecraft.entity.passive.BeeEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -17,7 +18,7 @@ public abstract class MixinClientEntity {
     @Inject(method = "Lnet/minecraft/entity/Entity;isInRangeToRenderDist(D)Z", at = @At("RETURN"), cancellable = true)
     public void isInRangeToRenderDist(double distance, CallbackInfoReturnable callbackInfoReturnable){
         if(((Entity)(Object)this).world.isRemote){
-            if(((Object)this) instanceof BeeEntity || ((Object)this) instanceof SilverfishEntity){
+            if(((Entity)(Object)this).getType() == EntityType.BEE || ((Entity)(Object)this).getType() == EntityType.SILVERFISH){
                 callbackInfoReturnable.setReturnValue(distance<4600);
             }
         }

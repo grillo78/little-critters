@@ -1,6 +1,7 @@
 package com.grillo78.littlecritters.mixin;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.SilverfishEntity;
 import net.minecraft.entity.passive.BeeEntity;
@@ -16,7 +17,7 @@ public abstract class MixinMonsterEntity {
 
     @Inject(method = "Lnet/minecraft/entity/monster/MonsterEntity;isDespawnPeaceful()Z", at = @At("RETURN"), cancellable = true)
     public void isInRangeToRenderDist(CallbackInfoReturnable callbackInfoReturnable) {
-        if (((Object) this) instanceof SilverfishEntity) {
+        if (((MonsterEntity)(Object) this).getType() == EntityType.SILVERFISH) {
             callbackInfoReturnable.setReturnValue(false);
         }
     }
