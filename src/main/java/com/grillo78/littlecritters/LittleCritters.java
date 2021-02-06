@@ -9,7 +9,6 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.monster.SilverfishEntity;
 import net.minecraft.entity.passive.BeeEntity;
-import net.minecraft.network.datasync.DataParameter;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -30,7 +29,7 @@ public class LittleCritters
 
     public LittleCritters() {
         MinecraftForge.EVENT_BUS.addListener(this::onSizeChange);
-        MinecraftForge.EVENT_BUS.addListener(this::onEntityConstructing);
+        MinecraftForge.EVENT_BUS.addListener(this::onEntityJoinWorld);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, ()-> () -> {
             MinecraftForge.EVENT_BUS.addListener(this::onPreEntityRender);
             MinecraftForge.EVENT_BUS.addListener(this::onPostEntityRender);
@@ -56,7 +55,7 @@ public class LittleCritters
         event.getMatrixStack().pop();
     }
 
-    private void onEntityConstructing(EntityJoinWorldEvent event){
+    private void onEntityJoinWorld(EntityJoinWorldEvent event){
         if(event.getEntity() instanceof BeeEntity || event.getEntity() instanceof SilverfishEntity){
             setAttribute(((LivingEntity)event.getEntity()),"custom_max_health",Attributes.MAX_HEALTH,UUID.fromString("cbc6c4d8-03e2-4e7e-bcdf-fa9266f33195"),-(((CreatureEntity) event.getEntity()).getHealth()-1), AttributeModifier.Operation.ADDITION);
         }

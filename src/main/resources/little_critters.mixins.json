@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "com.grillo78.littlecritters.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "little_critters.refmap.json",
+  "mixins": [
+  ],
+  "client":[
+    "MixinClientEntity"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}
