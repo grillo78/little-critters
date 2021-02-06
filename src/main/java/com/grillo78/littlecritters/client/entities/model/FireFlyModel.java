@@ -28,63 +28,71 @@ public class FireFlyModel<T extends FireFlyEntity> extends SegmentedModel<T> {
     private float bodyPitch;
 
     public FireFlyModel() {
-        this.textureWidth = 64;
-        this.textureHeight = 32;
-        this.Leg3 = new ModelRenderer(this, 0, 24);
-        this.Leg3.setRotationPoint(0.0F, 1.5F, 0.0F);
-        this.Leg3.addBox(-2.0F, 0.0F, 0.0F, 4, 3, 1, 0.0F);
-        this.setRotateAngle(Leg3, 0.7853981633974483F, 0.0F, 0.0F);
-        this.Bum = new ModelRenderer(this, 25, 8);
-        this.Bum.setRotationPoint(0.0F, -0.5F, 1.0F);
-        this.Bum.addBox(-3.0F, -1.0F, 0.0F, 6, 3, 3, 0.0F);
-        this.LWing = new ModelRenderer(this, 0, 19);
-        this.LWing.setRotationPoint(1.0F, -1.5F, -1.0F);
-        this.LWing.addBox(0.0F, 0.0F, 0.0F, 6, 1, 4, 0.0F);
-        this.setRotateAngle(LWing, 0.0F, 0.0F, -0.39269908169872414F);
-        this.Antenne = new ModelRenderer(this, 20, 0);
-        this.Antenne.setRotationPoint(0.0F, -0.5F, -4.0F);
-        this.Antenne.addBox(-3.0F, 0.0F, -5.0F, 6, 1, 5, 0.0F);
-        this.setRotateAngle(Antenne, -0.7853981633974483F, 0.0F, 0.0F);
-        this.RWing = new ModelRenderer(this, 0, 19);
-        this.RWing.mirror = true;
-        this.RWing.setRotationPoint(-1.0F, -1.5F, -1.0F);
-        this.RWing.addBox(-6.0F, 0.0F, 0.0F, 6, 1, 4, 0.0F);
-        this.setRotateAngle(RWing, 0.0F, 0.0F, 0.39269908169872414F);
-        this.LWingcase = new ModelRenderer(this, 0, 11);
-        this.LWingcase.setRotationPoint(0.0F, -1.5F, -2.0F);
-        this.LWingcase.addBox(0.0F, 0.0F, -6.0F, 3, 2, 6, 0.0F);
-        this.setRotateAngle(LWingcase, 0.0F, -1.5707963267948966F, -0.7853981633974483F);
-        this.RWingcase = new ModelRenderer(this, 0, 11);
-        this.RWingcase.mirror = true;
-        this.RWingcase.setRotationPoint(0.0F, -1.5F, -2.0F);
-        this.RWingcase.addBox(-3.0F, 0.0F, -6.0F, 3, 2, 6, 0.0F);
-        this.setRotateAngle(RWingcase, 0.0F, 1.5707963267948966F, 0.8196066167365371F);
-        this.Body = new ModelRenderer(this, 3, 3);
-        this.Body.setRotationPoint(0.0F, 19.5F, 0.0F);
-        this.Body.addBox(-3.0F, -1.5F, -4.0F, 6, 3, 5, 0.0F);
-        this.Leg2 = new ModelRenderer(this, 0, 24);
-        this.Leg2.setRotationPoint(0.0F, 1.5F, -1.0F);
-        this.Leg2.addBox(-2.0F, 0.0F, 0.0F, 4, 3, 1, 0.0F);
-        this.setRotateAngle(Leg2, 0.39269908169872414F, 0.0F, 0.0F);
-        this.Leg1 = new ModelRenderer(this, 0, 24);
-        this.Leg1.setRotationPoint(0.0F, 1.5F, -2.0F);
-        this.Leg1.addBox(-2.0F, 0.0F, 0.0F, 4, 3, 1, 0.0F);
-        this.setRotateAngle(Leg1, 0.20507618710933373F, 0.0F, 0.0F);
-        this.Body.addChild(this.Leg3);
-        this.Body.addChild(this.Bum);
-        this.Body.addChild(this.LWing);
-        this.Body.addChild(this.Antenne);
-        this.Body.addChild(this.RWing);
-        this.Body.addChild(this.LWingcase);
-        this.Body.addChild(this.RWingcase);
-        this.Body.addChild(this.Leg2);
-        this.Body.addChild(this.Leg1);
+        textureWidth = 64;
+        textureHeight = 32;
+
+        Body = new ModelRenderer(this);
+        Body.setRotationPoint(0.0F, 19.5F, 0.0F);
+        Body.setTextureOffset(3, 3).addBox(-3.0F, -1.5F, -4.0F, 6.0F, 3.0F, 5.0F, 0.0F, false);
+
+        Leg3 = new ModelRenderer(this);
+        Leg3.setRotationPoint(0.0F, 1.5F, 0.0F);
+        Body.addChild(Leg3);
+        setRotationAngle(Leg3, 0.7854F, 0.0F, 0.0F);
+        Leg3.setTextureOffset(0, 24).addBox(1.0F, -0.15F, 0.0F, 1.0F, 3.0F, 1.0F, -0.15F, false);
+        Leg3.setTextureOffset(0, 24).addBox(-2.0F, -0.15F, 0.0F, 1.0F, 3.0F, 1.0F, -0.15F, true);
+
+        Bum = new ModelRenderer(this);
+        Bum.setRotationPoint(0.0F, -0.5F, 1.0F);
+        Body.addChild(Bum);
+        Bum.setTextureOffset(25, 8).addBox(-3.0F, -1.0F, 0.0F, 6.0F, 3.0F, 3.0F, 0.0F, false);
+
+        LWing = new ModelRenderer(this);
+        LWing.setRotationPoint(1.0F, -1.5F, -1.0F);
+        Body.addChild(LWing);
+        setRotationAngle(LWing, 0.0F, 0.0F, -0.3927F);
+        LWing.setTextureOffset(0, 19).addBox(0.0F, 0.0F, 0.0F, 6.0F, 1.0F, 4.0F, 0.0F, false);
+
+        Antenne = new ModelRenderer(this);
+        Antenne.setRotationPoint(0.0F, -0.5F, -4.0F);
+        Body.addChild(Antenne);
+        setRotationAngle(Antenne, -0.7854F, 0.0F, 0.0F);
+        Antenne.setTextureOffset(20, 0).addBox(-3.0F, 0.0F, -5.0F, 6.0F, 1.0F, 5.0F, 0.0F, false);
+
+        RWing = new ModelRenderer(this);
+        RWing.setRotationPoint(-1.0F, -1.5F, -1.0F);
+        Body.addChild(RWing);
+        setRotationAngle(RWing, 0.0F, 0.0F, 0.3927F);
+        RWing.setTextureOffset(0, 19).addBox(-6.0F, 0.0F, 0.0F, 6.0F, 1.0F, 4.0F, 0.0F, true);
+
+        LWingcase = new ModelRenderer(this);
+        LWingcase.setRotationPoint(0.0F, -1.5F, -2.0F);
+        Body.addChild(LWingcase);
+        setRotationAngle(LWingcase, 0.0F, -1.5708F, -0.7854F);
+        LWingcase.setTextureOffset(0, 11).addBox(0.0F, 0.0F, -6.0F, 3.0F, 2.0F, 6.0F, 0.0F, false);
+
+        RWingcase = new ModelRenderer(this);
+        RWingcase.setRotationPoint(0.0F, -1.5F, -2.0F);
+        Body.addChild(RWingcase);
+        setRotationAngle(RWingcase, 0.0F, 1.5708F, 0.8196F);
+        RWingcase.setTextureOffset(0, 11).addBox(-3.0F, 0.0F, -6.0F, 3.0F, 2.0F, 6.0F, 0.0F, true);
+
+        Leg2 = new ModelRenderer(this);
+        Leg2.setRotationPoint(0.0F, 1.5F, -1.0F);
+        Body.addChild(Leg2);
+        setRotationAngle(Leg2, 0.3927F, 0.0F, 0.0F);
+        Leg2.setTextureOffset(0, 24).addBox(1.0F, -0.15F, 0.0F, 1.0F, 3.0F, 1.0F, -0.15F, false);
+        Leg2.setTextureOffset(0, 24).addBox(-2.0F, -0.15F, 0.0F, 1.0F, 3.0F, 1.0F, -0.15F, true);
+
+        Leg1 = new ModelRenderer(this);
+        Leg1.setRotationPoint(0.0F, 1.5F, -2.0F);
+        Body.addChild(Leg1);
+        setRotationAngle(Leg1, 0.2051F, 0.0F, 0.0F);
+        Leg1.setTextureOffset(0, 24).addBox(1.0F, -0.15F, 0.0F, 1.0F, 3.0F, 1.0F, -0.15F, false);
+        Leg1.setTextureOffset(0, 24).addBox(-2.0F, -0.15F, 0.0F, 1.0F, 3.0F, 1.0F, -0.15F, true);
     }
 
-    /**
-     * This is a helper function from Tabula to set the rotation of model parts
-     */
-    public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
+    public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
         modelRenderer.rotateAngleX = x;
         modelRenderer.rotateAngleY = y;
         modelRenderer.rotateAngleZ = z;

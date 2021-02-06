@@ -38,7 +38,7 @@ public class FireFlyRenderer extends MobRenderer<FireFlyEntity, FireFlyModel<Fir
 
     protected void preRenderCallback(FireFlyEntity entitylivingbaseIn, MatrixStack matrixStackIn,
                                      float partialTickTime) {
-        matrixStackIn.scale(0.05F, 0.05F, 0.05F);
+        matrixStackIn.scale(0.1F, 0.1F, 0.1F);
     }
 
     @Override

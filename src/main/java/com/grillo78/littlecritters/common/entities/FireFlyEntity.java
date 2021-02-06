@@ -60,6 +60,8 @@ public class FireFlyEntity extends AnimalEntity implements IFlyingAnimal {
         this.setPathPriority(PathNodeType.FENCE, -1.0F);
     }
 
+
+
     @Override
     protected void registerGoals() {
         super.registerGoals();
@@ -69,7 +71,7 @@ public class FireFlyEntity extends AnimalEntity implements IFlyingAnimal {
 
     public static AttributeModifierMap.MutableAttribute setFireFlyAttributes() {
         return MobEntity.func_233666_p_()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 5.0D)
+                .createMutableAttribute(Attributes.MAX_HEALTH, 1.0D)
                 .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.3D)
                 .createMutableAttribute(Attributes.FLYING_SPEED, 0.6D);
     }
@@ -242,7 +244,7 @@ public class FireFlyEntity extends AnimalEntity implements IFlyingAnimal {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return null;
+        return SoundEvents.ENTITY_BEE_LOOP;
     }
 
     protected boolean makeFlySound() {
