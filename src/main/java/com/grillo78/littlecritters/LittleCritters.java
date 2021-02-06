@@ -7,6 +7,7 @@ import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
+import net.minecraft.entity.ai.goal.HurtByTargetGoal;
 import net.minecraft.entity.monster.SilverfishEntity;
 import net.minecraft.entity.passive.BeeEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -57,6 +58,9 @@ public class LittleCritters
 
     private void onEntityJoinWorld(EntityJoinWorldEvent event){
         if(event.getEntity() instanceof BeeEntity || event.getEntity() instanceof SilverfishEntity){
+            if(event.getEntity() instanceof SilverfishEntity){
+                ((SilverfishEntity)event.getEntity()).targetSelector.goals.clear();
+            }
             setAttribute(((LivingEntity)event.getEntity()),"custom_max_health",Attributes.MAX_HEALTH,UUID.fromString("cbc6c4d8-03e2-4e7e-bcdf-fa9266f33195"),-(((CreatureEntity) event.getEntity()).getHealth()-1), AttributeModifier.Operation.ADDITION);
         }
     }
