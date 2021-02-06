@@ -2,8 +2,6 @@ package com.grillo78.littlecritters.mixin;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.monster.SilverfishEntity;
-import net.minecraft.entity.passive.BeeEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.spongepowered.asm.mixin.Mixin;
