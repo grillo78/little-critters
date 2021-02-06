@@ -4,7 +4,8 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "little_critters.refmap.json",
   "mixins": [
-    "MixinMonsterEntity"
+    "MixinMonsterEntity",
+    "MixinMobEntity"
   ],
   "client":[
     "MixinClientEntity"
