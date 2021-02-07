@@ -1,15 +1,20 @@
 package com.grillo78.littlecritters;
 
 import com.grillo78.littlecritters.client.entities.renderers.FireFlyRendererFactory;
+import com.grillo78.littlecritters.client.entities.renderers.NewSquidRenderer;
 import com.grillo78.littlecritters.common.entities.FireFlyEntity;
 import com.grillo78.littlecritters.common.entities.ModEntities;
 import com.grillo78.littlecritters.common.items.ModItems;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.LivingRenderer;
+import com.grillo78.littlecritters.client.entities.model.SquidModel;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.monster.SilverfishEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.gen.Heightmap;
@@ -67,6 +72,10 @@ public class LittleCritters {
             event.setNewSize(new EntitySize(0.05F, 0.025F, true));
             event.setNewEyeHeight(0.05F);
         }
+        if (event.getEntity().getType() == EntityType.SQUID) {
+            event.setNewSize(new EntitySize(0.5F, 0.5F, true));
+            event.setNewEyeHeight(0.4F);
+        }
     }
 
     private void onEntityJoinWorld(EntityJoinWorldEvent event) {
@@ -96,6 +105,7 @@ public class LittleCritters {
     @OnlyIn(Dist.CLIENT)
     private void doClientStuff(FMLClientSetupEvent event) {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.FIRE_FLY_ENTITY, new FireFlyRendererFactory());
+        Minecraft.getInstance().getRenderManager().renderers.put(EntityType.SQUID, new NewSquidRenderer(Minecraft.getInstance().getRenderManager()));
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -111,4 +121,5 @@ public class LittleCritters {
     private void onPostEntityRender(RenderLivingEvent.Post event) {
         event.getMatrixStack().pop();
     }
+
 }
