@@ -54,7 +54,7 @@ public class LittleCritters {
 
     private void setup(FMLCommonSetupEvent event) {
         PacketHandler.init();
-        EntityType.BEE.size = EntitySize.flexible(0.05F, 0.05F);
+        EntityType.BEE.size = EntitySize.flexible(0.1F, 0.1F);
         EntityType.SILVERFISH.size = EntitySize.flexible(0.05F, 0.05F);
         EntityType.SQUID.size = EntitySize.flexible(0.5F, 0.5F);
         event.enqueueWork(() -> {
