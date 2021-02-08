@@ -2,26 +2,23 @@ package com.grillo78.littlecritters;
 
 import com.grillo78.littlecritters.client.entities.renderers.FireFlyRendererFactory;
 import com.grillo78.littlecritters.client.entities.renderers.NewSquidRenderer;
-import com.grillo78.littlecritters.common.entities.FireFlyEntity;
 import com.grillo78.littlecritters.common.entities.ModEntities;
 import com.grillo78.littlecritters.common.items.ModItems;
+import com.grillo78.littlecritters.network.PacketHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.LivingRenderer;
-import com.grillo78.littlecritters.client.entities.model.SquidModel;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.monster.SilverfishEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.MobSpawnInfo;
-import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -31,6 +28,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,7 +43,6 @@ public class LittleCritters {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         ModEntities.ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        MinecraftForge.EVENT_BUS.addListener(this::onSizeChange);
         MinecraftForge.EVENT_BUS.addListener(this::onBiomeLoad);
         MinecraftForge.EVENT_BUS.addListener(this::onEntityJoinWorld);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
@@ -56,6 +53,10 @@ public class LittleCritters {
     }
 
     private void setup(FMLCommonSetupEvent event) {
+        PacketHandler.init();
+        EntityType.BEE.size = EntitySize.flexible(0.05F, 0.05F);
+        EntityType.SILVERFISH.size = EntitySize.flexible(0.05F, 0.05F);
+        EntityType.SQUID.size = EntitySize.flexible(0.5F, 0.5F);
         event.enqueueWork(() -> {
             ModEntities.initEntityAttributes();
             ModEntities.registerSpawnPlacement();
@@ -67,38 +68,30 @@ public class LittleCritters {
             event.getSpawns().getSpawner(EntityClassification.AMBIENT).add(new MobSpawnInfo.Spawners(ModEntities.FIRE_FLY_ENTITY, 100, 1, 10));
     }
 
-    private void onSizeChange(EntityEvent.Size event) {
-        if (event.getEntity().getType() == EntityType.BEE || event.getEntity().getType() == EntityType.SILVERFISH) {
-            event.setNewSize(new EntitySize(0.05F, 0.025F, true));
-            event.setNewEyeHeight(0.05F);
-        }
-        if (event.getEntity().getType() == EntityType.SQUID) {
-            event.setNewSize(new EntitySize(0.5F, 0.5F, true));
-            event.setNewEyeHeight(0.4F);
-        }
-    }
-
     private void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if (event.getEntity().getType() == EntityType.BEE || event.getEntity().getType() == EntityType.SILVERFISH) {
-            if (event.getEntity().getType() == EntityType.SILVERFISH) {
-                ((SilverfishEntity) event.getEntity()).targetSelector.goals.clear();
+        if (!event.getWorld().isRemote) {
+            if (event.getEntity().getType() == EntityType.BEE || event.getEntity().getType() == EntityType.SILVERFISH || event.getEntity().getType() == EntityType.SQUID) {
+                if (event.getEntity().getType() == EntityType.SILVERFISH) {
+                    ((SilverfishEntity) event.getEntity()).targetSelector.goals.clear();
+                }
+                setAttribute(((LivingEntity) event.getEntity()), "custom_max_health", Attributes.MAX_HEALTH, UUID.fromString("cbc6c4d8-03e2-4e7e-bcdf-fa9266f33195"), -(((CreatureEntity) event.getEntity()).getMaxHealth() - 0.5), AttributeModifier.Operation.ADDITION);
+                if(((CreatureEntity) event.getEntity()).getHealth()>1)
+                    ((CreatureEntity) event.getEntity()).setHealth(1F);
             }
-            setAttribute(((LivingEntity) event.getEntity()), "custom_max_health", Attributes.MAX_HEALTH, UUID.fromString("cbc6c4d8-03e2-4e7e-bcdf-fa9266f33195"), -(((CreatureEntity) event.getEntity()).getHealth() - 1), AttributeModifier.Operation.ADDITION);
         }
     }
 
     private void setAttribute(LivingEntity entity, String name, Attribute attribute, UUID uuid, double amount, AttributeModifier.Operation operation) {
         ModifiableAttributeInstance instance = entity.getAttribute(attribute);
 
-        if (instance == null) {
-            return;
-        }
+        if (instance != null) {
 
-        AttributeModifier modifier = instance.getModifier(uuid);
+            AttributeModifier modifier = instance.getModifier(uuid);
 
-        if (modifier == null) {
-            modifier = new AttributeModifier(uuid, name, amount, operation);
-            instance.applyPersistentModifier(modifier);
+            if (modifier == null) {
+                modifier = new AttributeModifier(uuid, name, amount, operation);
+                instance.applyNonPersistentModifier(modifier);
+            }
         }
     }
 

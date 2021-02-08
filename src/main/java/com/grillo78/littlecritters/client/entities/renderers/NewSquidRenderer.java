@@ -25,7 +25,7 @@ public class NewSquidRenderer extends MobRenderer<SquidEntity, SquidModel<SquidE
         matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180.0F - rotationYaw));
         matrixStackIn.rotate(Vector3f.XP.rotationDegrees(f));
         matrixStackIn.rotate(Vector3f.YP.rotationDegrees(f1));
-        matrixStackIn.scale(0.25F,0.25F,0.25F);
+        matrixStackIn.scale(0.4F,0.4F,0.4F);
     }
 
     /**

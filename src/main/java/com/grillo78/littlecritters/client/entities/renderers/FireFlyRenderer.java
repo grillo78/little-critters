@@ -17,9 +17,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class FireFlyRenderer extends MobRenderer<FireFlyEntity, FireFlyModel<FireFlyEntity>> {
     private static final ResourceLocation RESOURCE_LOCATION = new ResourceLocation(LittleCritters.MOD_ID,
-            "textures/entity/fire_fly.png");
+            "textures/entity/firefly.png");
     private static final ResourceLocation RESOURCE_LOCATION_GLOW = new ResourceLocation(LittleCritters.MOD_ID,
-            "textures/entity/fire_fly_glow.png");
+            "textures/entity/firefly_glow.png");
 
     public FireFlyRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new FireFlyModel<>(), 0.1F);
