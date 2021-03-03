@@ -1,10 +1,11 @@
 package com.grillo78.littlecritters.network;
 
 import com.grillo78.littlecritters.LittleCritters;
+import com.grillo78.littlecritters.network.messages.IMessage;
+import com.grillo78.littlecritters.network.messages.MessageCatchEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
-import com.grillo78.littlecritters.network.messages.*;
 
 public class PacketHandler {
     public static final String PROTOCOL_VERSION = "1";

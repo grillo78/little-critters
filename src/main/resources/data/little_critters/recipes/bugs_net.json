@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  #",
+    " / ",
+    "/S "
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:white_wool"
+    },
+    "/": {
+      "item": "minecraft:stick"
+    },
+    "S": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "item": "little_critters:bug_net",
+    "count": 1
+  }
+}

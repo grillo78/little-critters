@@ -1,10 +1,10 @@
 package com.grillo78.littlecritters.client.entities.renderers;
+
 import com.grillo78.littlecritters.LittleCritters;
 import com.grillo78.littlecritters.client.entities.model.FireFlyModel;
 import com.grillo78.littlecritters.client.util.ModRenderTypes;
 import com.grillo78.littlecritters.common.entities.FireFlyEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
-
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;

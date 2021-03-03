@@ -1,4 +1,6 @@
 {
   "entity.little_critters.firefly": "Luciérnaga",
-  "item.little_critters.firefly_spawn_egg": "Generar Luciérnaga"
+  "item.little_critters.firefly_spawn_egg": "Generar Luciérnaga",
+  "item.little_critters.bug_net": "Red",
+  "item.little_critters.animal": "Animal capturado"
 }

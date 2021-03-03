@@ -16,9 +16,9 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 
-version = '1.0'
-group = 'com.yourname.modid' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'modid'
+version = '0.0.1'
+group = 'com.grillo78.littlecritters' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = 'little_critters'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -100,6 +100,7 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.0.14'
     compile 'org.spongepowered:mixin:0.8'
     compile fg.deobf('curse.maven:neat-238372:3182258')
+    compile fg.deobf('curse.maven:chisel_and_bits-231095:3176033')
 
 }
 

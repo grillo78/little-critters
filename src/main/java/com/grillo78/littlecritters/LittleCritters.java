@@ -18,8 +18,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -28,7 +26,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,7 +52,7 @@ public class LittleCritters {
     private void setup(FMLCommonSetupEvent event) {
         PacketHandler.init();
         EntityType.BEE.size = EntitySize.flexible(0.1F, 0.1F);
-        EntityType.SILVERFISH.size = EntitySize.flexible(0.05F, 0.05F);
+        EntityType.SILVERFISH.size = EntitySize.flexible(0.1F, 0.1F);
         EntityType.SQUID.size = EntitySize.flexible(0.5F, 0.5F);
         event.enqueueWork(() -> {
             ModEntities.initEntityAttributes();
@@ -104,9 +101,13 @@ public class LittleCritters {
     @OnlyIn(Dist.CLIENT)
     private void onPreEntityRender(RenderLivingEvent.Pre event) {
         event.getMatrixStack().push();
-        if (event.getEntity().getType() == EntityType.BEE || event.getEntity().getType() == EntityType.SILVERFISH) {
+        if (event.getEntity().getType() == EntityType.BEE) {
             event.getRenderer().shadowSize *= 0.05F;
             event.getMatrixStack().scale(0.05F, 0.05F, 0.05F);
+        }
+        if(event.getEntity().getType() == EntityType.SILVERFISH){
+            event.getRenderer().shadowSize *= 0.05F;
+            event.getMatrixStack().scale(0.1F, 0.1F, 0.1F);
         }
     }
 
