@@ -1,6 +1,7 @@
 package com.grillo78.littlecritters;
 
 import com.grillo78.littlecritters.client.entities.renderers.FireFlyRendererFactory;
+import com.grillo78.littlecritters.client.entities.renderers.FlyRendererFactory;
 import com.grillo78.littlecritters.client.entities.renderers.NewSquidRenderer;
 import com.grillo78.littlecritters.common.entities.ModEntities;
 import com.grillo78.littlecritters.common.items.ModItems;
@@ -61,6 +62,8 @@ public class LittleCritters {
     }
 
     private void onBiomeLoad(BiomeLoadingEvent event) {
+        if (event.getCategory() != Biome.Category.DESERT && event.getCategory() != Biome.Category.OCEAN  && event.getCategory() != Biome.Category.RIVER && event.getCategory() != Biome.Category.NETHER && event.getCategory() != Biome.Category.THEEND)
+            event.getSpawns().getSpawner(EntityClassification.AMBIENT).add(new MobSpawnInfo.Spawners(ModEntities.FIRE_FLY_ENTITY, 100, 1, 10));
         if (event.getCategory() == Biome.Category.FOREST || event.getCategory() == Biome.Category.TAIGA)
             event.getSpawns().getSpawner(EntityClassification.AMBIENT).add(new MobSpawnInfo.Spawners(ModEntities.FIRE_FLY_ENTITY, 100, 1, 10));
     }
@@ -72,7 +75,7 @@ public class LittleCritters {
                     ((SilverfishEntity) event.getEntity()).targetSelector.goals.clear();
                 }
                 setAttribute(((LivingEntity) event.getEntity()), "custom_max_health", Attributes.MAX_HEALTH, UUID.fromString("cbc6c4d8-03e2-4e7e-bcdf-fa9266f33195"), -(((CreatureEntity) event.getEntity()).getMaxHealth() - 0.5), AttributeModifier.Operation.ADDITION);
-                if(((CreatureEntity) event.getEntity()).getHealth()>1)
+                if (((CreatureEntity) event.getEntity()).getHealth() > 1)
                     ((CreatureEntity) event.getEntity()).setHealth(1F);
             }
         }
@@ -95,6 +98,7 @@ public class LittleCritters {
     @OnlyIn(Dist.CLIENT)
     private void doClientStuff(FMLClientSetupEvent event) {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.FIRE_FLY_ENTITY, new FireFlyRendererFactory());
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.FLY_ENTITY, new FlyRendererFactory());
         Minecraft.getInstance().getRenderManager().renderers.put(EntityType.SQUID, new NewSquidRenderer(Minecraft.getInstance().getRenderManager()));
     }
 
@@ -105,7 +109,7 @@ public class LittleCritters {
             event.getRenderer().shadowSize *= 0.05F;
             event.getMatrixStack().scale(0.05F, 0.05F, 0.05F);
         }
-        if(event.getEntity().getType() == EntityType.SILVERFISH){
+        if (event.getEntity().getType() == EntityType.SILVERFISH) {
             event.getRenderer().shadowSize *= 0.05F;
             event.getMatrixStack().scale(0.1F, 0.1F, 0.1F);
         }

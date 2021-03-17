@@ -14,13 +14,16 @@ public class ModEntities {
             LittleCritters.MOD_ID);
 
     public static final EntityType<FireFlyEntity> FIRE_FLY_ENTITY = register("firefly", EntityType.Builder.<FireFlyEntity>create(FireFlyEntity::new, EntityClassification.AMBIENT).size(0.05F, 0.05F).build(LittleCritters.MOD_ID + ":fire_fly"));
+    public static final EntityType<FlyEntity> FLY_ENTITY = register("fly", EntityType.Builder.<FlyEntity>create(FlyEntity::new, EntityClassification.AMBIENT).size(0.05F, 0.05F).build(LittleCritters.MOD_ID + ":fly"));
 
     public static void initEntityAttributes() {
         GlobalEntityTypeAttributes.put(FIRE_FLY_ENTITY, FireFlyEntity.setFireFlyAttributes().create());
+        GlobalEntityTypeAttributes.put(FLY_ENTITY, FlyEntity.setFlyAttributes().create());
     }
 
     public static void registerSpawnPlacement() {
         EntitySpawnPlacementRegistry.register(FIRE_FLY_ENTITY, EntitySpawnPlacementRegistry.PlacementType.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, FireFlyEntity::canSpawn);
+        EntitySpawnPlacementRegistry.register(FLY_ENTITY, EntitySpawnPlacementRegistry.PlacementType.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, FlyEntity::canSpawn);
     }
 
     private static <T extends EntityType> T register(String name, T entity) {
