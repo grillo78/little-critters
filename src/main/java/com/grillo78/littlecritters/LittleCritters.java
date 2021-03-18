@@ -3,6 +3,7 @@ package com.grillo78.littlecritters;
 import com.grillo78.littlecritters.client.entities.renderers.FireFlyRendererFactory;
 import com.grillo78.littlecritters.client.entities.renderers.FlyRendererFactory;
 import com.grillo78.littlecritters.client.entities.renderers.NewSquidRenderer;
+import com.grillo78.littlecritters.common.entities.FlyEntity;
 import com.grillo78.littlecritters.common.entities.ModEntities;
 import com.grillo78.littlecritters.common.items.ModItems;
 import com.grillo78.littlecritters.network.PacketHandler;
@@ -13,6 +14,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.monster.SilverfishEntity;
+import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraftforge.api.distmarker.Dist;
@@ -64,8 +66,8 @@ public class LittleCritters {
     private void onBiomeLoad(BiomeLoadingEvent event) {
         if (event.getCategory() != Biome.Category.DESERT && event.getCategory() != Biome.Category.OCEAN  && event.getCategory() != Biome.Category.RIVER && event.getCategory() != Biome.Category.NETHER && event.getCategory() != Biome.Category.THEEND)
             event.getSpawns().getSpawner(EntityClassification.AMBIENT).add(new MobSpawnInfo.Spawners(ModEntities.FIRE_FLY_ENTITY, 100, 1, 10));
-        if (event.getCategory() == Biome.Category.FOREST || event.getCategory() == Biome.Category.TAIGA)
-            event.getSpawns().getSpawner(EntityClassification.AMBIENT).add(new MobSpawnInfo.Spawners(ModEntities.FIRE_FLY_ENTITY, 100, 1, 10));
+        if (event.getCategory() == Biome.Category.FOREST || event.getCategory() == Biome.Category.TAIGA || event.getCategory() == Biome.Category.PLAINS || event.getCategory() == Biome.Category.EXTREME_HILLS || event.getCategory() == Biome.Category.SWAMP || event.getCategory() == Biome.Category.BEACH || event.getCategory() == Biome.Category.JUNGLE || event.getCategory() == Biome.Category.MESA)
+            event.getSpawns().getSpawner(EntityClassification.AMBIENT).add(new MobSpawnInfo.Spawners(ModEntities.FLY_ENTITY, 100, 1, 10));
     }
 
     private void onEntityJoinWorld(EntityJoinWorldEvent event) {

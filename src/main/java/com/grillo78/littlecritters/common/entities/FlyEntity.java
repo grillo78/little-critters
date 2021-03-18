@@ -16,6 +16,7 @@ import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.entity.passive.PigEntity;
+import net.minecraft.entity.passive.horse.HorseEntity;
 import net.minecraft.pathfinding.FlyingPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.pathfinding.PathNodeType;
@@ -87,7 +88,8 @@ public class FlyEntity extends AnimalEntity implements IFlyingAnimal {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new FollowPigGoal(this,1.0D, 0.25F, 10.0F));
+        this.goalSelector.addGoal(0, new FollowPigGoal(this,1.0D, 0.25F, 10.0F, PigEntity.class));
+        this.goalSelector.addGoal(0, new FollowPigGoal(this,1.0D, 0.25F, 10.0F, HorseEntity.class));
         this.goalSelector.addGoal(1, new WanderGoal());
         this.goalSelector.addGoal(2, new SwimGoal(this));
     }
@@ -153,10 +155,10 @@ public class FlyEntity extends AnimalEntity implements IFlyingAnimal {
 
     class FollowPigGoal extends FollowMobGoal {
 
-        public FollowPigGoal(MobEntity entity, double speedModifier, float stopDistance, float areaSize) {
+        public FollowPigGoal(MobEntity entity, double speedModifier, float stopDistance, float areaSize, Class clazz) {
             super(entity, speedModifier, stopDistance, areaSize);
             this.followPredicate = (p_210291_1_) -> {
-                return p_210291_1_ != null && PigEntity.class == p_210291_1_.getClass();
+                return p_210291_1_ != null && clazz == p_210291_1_.getClass();
             };
         }
 

@@ -1,4 +1,4 @@
-package com.grillo78.littlecritters.client.entities.model;// Made with Blockbench 3.8.0
+package com.grillo78.littlecritters.client.entities.model;// Made with Blockbench 3.8.2
 // Exported for Minecraft version 1.15
 // Paste this class into your mod and generate all required imports
 
@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.util.math.MathHelper;
 
 public class FlyModel<F extends AnimalEntity> extends EntityModel<FlyEntity> {
 	private final ModelRenderer bone;
@@ -58,16 +59,16 @@ public class FlyModel<F extends AnimalEntity> extends EntityModel<FlyEntity> {
 		bone4.setTextureOffset(28, 38).addBox(-4.0F, -21.0F, -14.0F, 7.0F, 6.0F, 4.0F, 0.0F, false);
 
 		left_wing = new ModelRenderer(this);
-		left_wing.setRotationPoint(0.0F, 15.0F, 6.0F);
+		left_wing.setRotationPoint(0.175F, -5.0F, -3.325F);
 		bone.addChild(left_wing);
 		setRotationAngle(left_wing, 0.2618F, 0.0873F, 0.0F);
-		left_wing.setTextureOffset(36, 13).addBox(1.0F, -21.7071F, -3.7753F, 7.0F, 0.0F, 11.0F, 0.0F, false);
+		left_wing.setTextureOffset(36, 13).addBox(0.0126F, 0.0118F, 0.0065F, 7.0F, 0.0F, 11.0F, 0.0F, false);
 
 		right_wing = new ModelRenderer(this);
-		right_wing.setRotationPoint(0.0F, 14.0F, 7.0F);
+		right_wing.setRotationPoint(-1.1F, -5.0F, -3.4F);
 		bone.addChild(right_wing);
 		setRotationAngle(right_wing, 0.2618F, -0.0873F, 0.0F);
-		right_wing.setTextureOffset(36, 25).addBox(-9.0F, -21.0F, -5.0F, 7.0F, 0.0F, 11.0F, 0.0F, false);
+		right_wing.setTextureOffset(36, 25).addBox(-6.9974F, 0.0092F, -0.0028F, 7.0F, 0.0F, 11.0F, 0.0F, false);
 
 		bone2 = new ModelRenderer(this);
 		bone2.setRotationPoint(-3.5F, 0.0F, 1.5F);
@@ -107,8 +108,16 @@ public class FlyModel<F extends AnimalEntity> extends EntityModel<FlyEntity> {
 	}
 
 	@Override
-	public void setRotationAngles(FlyEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch){
-		//previously the render function, render code was moved to a method below
+	public void setRotationAngles(FlyEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch){
+		boolean flag = entityIn.isOnGround() && entityIn.getMotion().lengthSquared() < 1.0E-7D;
+		if (!flag) {
+			float f = ageInTicks * 2.1F;
+			this.right_wing.rotateAngleY = 0.0F;
+			this.right_wing.rotateAngleZ = MathHelper.cos(f) * (float) Math.PI * 0.15F;
+			this.left_wing.rotateAngleX = this.right_wing.rotateAngleX;
+			this.left_wing.rotateAngleY = this.right_wing.rotateAngleY;
+			this.left_wing.rotateAngleZ = -this.right_wing.rotateAngleZ;
+		}
 	}
 
 	@Override

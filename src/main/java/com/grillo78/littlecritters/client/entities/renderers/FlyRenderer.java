@@ -2,13 +2,11 @@ package com.grillo78.littlecritters.client.entities.renderers;
 
 import com.grillo78.littlecritters.LittleCritters;
 import com.grillo78.littlecritters.client.entities.model.FlyModel;
-import com.grillo78.littlecritters.common.entities.FireFlyEntity;
 import com.grillo78.littlecritters.common.entities.FlyEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
