@@ -17,7 +17,7 @@ public class ModItems {
 
     public static final Item FIREFLY_SPAWN_EGG = register("firefly_spawn_egg", new SpawnEggItem(ModEntities.FIRE_FLY_ENTITY, 16737280, 9843200, new Item.Properties().group(ItemGroup.MISC)));
     public static final Item FLY_SPAWN_EGG = register("fly_spawn_egg", new SpawnEggItem(ModEntities.FLY_ENTITY, 3158064, 7237230, new Item.Properties().group(ItemGroup.MISC)));
-    public static final Item BUG_NET = register("bug_net", new BugNetItem(new Item.Properties().group(ItemGroup.TOOLS), Lists.newArrayList(ModEntities.FIRE_FLY_ENTITY, EntityType.BEE, EntityType.SILVERFISH)));
+    public static final Item BUG_NET = register("bug_net", new BugNetItem(new Item.Properties().group(ItemGroup.TOOLS), Lists.newArrayList(ModEntities.FIRE_FLY_ENTITY, EntityType.BEE, EntityType.SILVERFISH, ModEntities.FLY_ENTITY)));
     public static final Item ANIMAL = register("animal", new AnimalItem(new Item.Properties().setISTER(()->AnimalItemStackTileEntityRenderer::new)));
 
     private static <T extends Item> T register(String name, T item) {
