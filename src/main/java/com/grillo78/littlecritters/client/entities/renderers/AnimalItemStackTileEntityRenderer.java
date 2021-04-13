@@ -34,10 +34,10 @@ public class AnimalItemStackTileEntityRenderer extends ItemStackTileEntityRender
     }
 
     @Override
-    public void renderByItem(ItemStack stack, ItemCameraTransforms.TransformType p_239207_2_, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
-        super.renderByItem(stack, p_239207_2_, matrixStack, buffer, combinedLight, combinedOverlay);
+    public void renderByItem(ItemStack stack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+        super.renderByItem(stack, transformType, matrixStack, buffer, combinedLight, combinedOverlay);
         matrixStack.pushPose();
-        switch (p_239207_2_) {
+        switch (transformType) {
             case GUI:
                 matrixStack.translate(0.5, 3, 0.5);
                 matrixStack.scale(2F, 2F, 2F);

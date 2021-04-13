@@ -16,11 +16,16 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.monster.SilverfishEntity;
 import net.minecraft.entity.passive.PigEntity;
+import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.FOVUpdateEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -48,8 +53,10 @@ public class LittleCritters {
         MinecraftForge.EVENT_BUS.addListener(this::onEntityJoinWorld);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
             FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+            FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerModel);
             MinecraftForge.EVENT_BUS.addListener(this::onPreEntityRender);
             MinecraftForge.EVENT_BUS.addListener(this::onPostEntityRender);
+            MinecraftForge.EVENT_BUS.addListener(this::onFovUpdate);
         });
     }
 
@@ -124,4 +131,29 @@ public class LittleCritters {
         event.getMatrixStack().popPose();
     }
 
+
+    @OnlyIn(Dist.CLIENT)
+    public void onFovUpdate(FOVUpdateEvent event) {
+        if (event.getEntity().getItemInHand(Hand.MAIN_HAND).getItem() == ModItems.MAG) {
+            if (Minecraft.getInstance().options.keyUse.isDown()) {
+                event.setNewfov(calculateFov(15F, event.getFov()));
+            }
+        } else {
+            if (event.getEntity().getItemInHand(Hand.OFF_HAND).getItem() == ModItems.MAG) {
+                if (Minecraft.getInstance().options.keyUse.isDown()) {
+                    event.setNewfov(calculateFov(15F, event.getFov()));
+                }
+            }
+        }
+    }
+
+    public void registerModel(ModelRegistryEvent event) {
+        ModelLoader.addSpecialModel(new ResourceLocation(MOD_ID, "item/magnifying_glass_2d"));
+        ModelLoader.addSpecialModel(new ResourceLocation(MOD_ID, "item/magnifying_glass_3d"));
+    }
+
+    public static float calculateFov(float zoom, float fov)
+    {
+        return (float)Math.atan(Math.tan(fov) / zoom);
+    }
 }
