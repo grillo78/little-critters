@@ -36,53 +36,53 @@ public class FlyEntity extends AnimalEntity implements IFlyingAnimal {
 
     public FlyEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
         super(type, worldIn);
-        this.moveController = new FlyingMovementController(this, 20, true);
-        this.lookController = new LookController(this);
-        this.setPathPriority(PathNodeType.DANGER_FIRE, -1.0F);
-        this.setPathPriority(PathNodeType.WATER, -1.0F);
-        this.setPathPriority(PathNodeType.WATER_BORDER, 16.0F);
-        this.setPathPriority(PathNodeType.COCOA, -1.0F);
-        this.setPathPriority(PathNodeType.FENCE, -1.0F);
+        this.moveControl = new FlyingMovementController(this, 20, true);
+        this.lookControl = new LookController(this);
+        this.setPathfindingMalus(PathNodeType.DANGER_FIRE, -1.0F);
+        this.setPathfindingMalus(PathNodeType.WATER, -1.0F);
+        this.setPathfindingMalus(PathNodeType.WATER_BORDER, 16.0F);
+        this.setPathfindingMalus(PathNodeType.COCOA, -1.0F);
+        this.setPathfindingMalus(PathNodeType.FENCE, -1.0F);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public boolean isInRangeToRenderDist(double distance) {
+    public boolean shouldRenderAtSqrDistance(double distance) {
         return distance<4600;
     }
 
-    public void applyEntityCollision(Entity entityIn) {
+    public void push(Entity entityIn) {
     }
 
     @Override
-    protected void updateFallState(double y, boolean onGroundIn, BlockState state, BlockPos pos) {
+    protected void checkFallDamage(double y, boolean onGroundIn, BlockState state, BlockPos pos) {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource dmg, float i) {
+    public boolean hurt(DamageSource dmg, float i) {
         if (dmg == DamageSource.IN_WALL) {
             return false;
         }
-        return super.attackEntityFrom(dmg, i);
+        return super.hurt(dmg, i);
     }
 
     @Override
-    public CreatureAttribute getCreatureAttribute() {
+    public CreatureAttribute getMobType() {
         return CreatureAttribute.ARTHROPOD;
     }
 
     public static boolean canSpawn(EntityType<FlyEntity> entityTypeIn, IWorld world, SpawnReason reason,
                                    BlockPos blockpos, Random rand) {
-        Block block = world.getBlockState(blockpos.down()).getBlock();
+        Block block = world.getBlockState(blockpos.below()).getBlock();
         return (block == Blocks.DIRT || block == Blocks.COARSE_DIRT || block == Blocks.PODZOL
                 || block == Blocks.GRASS_BLOCK || block == Blocks.AIR);
     }
 
     public static AttributeModifierMap.MutableAttribute setFlyAttributes() {
-        return MobEntity.func_233666_p_()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 1.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.5D)
-                .createMutableAttribute(Attributes.FLYING_SPEED, 0.6D);
+        return MobEntity.createMobAttributes()
+                .add(Attributes.MAX_HEALTH, 1.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.5D)
+                .add(Attributes.FLYING_SPEED, 0.6D);
     }
 
     @Override
@@ -95,60 +95,60 @@ public class FlyEntity extends AnimalEntity implements IFlyingAnimal {
 
     @Nullable
     @Override
-    public AgeableEntity func_241840_a(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
+    public AgeableEntity getBreedOffspring(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
         return null;
     }
 
-    protected PathNavigator createNavigator(World worldIn) {
+    protected PathNavigator createNavigation(World worldIn) {
         FlyingPathNavigator flyingpathnavigator = new FlyingPathNavigator(this, worldIn) {
 
-            public boolean canEntityStandOnPos(BlockPos pos) {
-                return !this.world.getBlockState(pos.down()).isAir();
+            public boolean isStableDestination(BlockPos pos) {
+                return !this.level.getBlockState(pos.below()).isAir();
             }
 
         };
         flyingpathnavigator.setCanOpenDoors(false);
-        flyingpathnavigator.setCanSwim(false);
-        flyingpathnavigator.setCanEnterDoors(true);
+        flyingpathnavigator.setCanFloat(false);
+        flyingpathnavigator.setCanPassDoors(true);
         return flyingpathnavigator;
     }
 
     class WanderGoal extends Goal {
         WanderGoal() {
-            this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE));
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE));
         }
 
         /**
          * Returns whether execution should begin. You can also read and cache any state
          * necessary for execution in this method as well.
          */
-        public boolean shouldExecute() {
-            return FlyEntity.this.navigator.noPath() && FlyEntity.this.rand.nextInt(2) == 0;
+        public boolean canUse() {
+            return FlyEntity.this.navigation.isDone() && FlyEntity.this.random.nextInt(2) == 0;
         }
 
         /**
          * Returns whether an in-progress EntityAIBase should continue executing
          */
-        public boolean shouldContinueExecuting() {
-            return FlyEntity.this.navigator.hasPath();
+        public boolean canContinueToUse() {
+            return FlyEntity.this.navigation.isInProgress();
         }
 
         /**
          * Execute a one shot task or start executing a continuous task
          */
-        public void startExecuting() {
+        public void start() {
             Vector3d vector3d = this.getRandomLocation();
             if (vector3d != null) {
-                FlyEntity.this.navigator.setPath(FlyEntity.this.navigator.getPathToPos(new BlockPos(vector3d), 1), 1.0D);
+                FlyEntity.this.navigation.moveTo(FlyEntity.this.navigation.createPath(new BlockPos(vector3d), 1), 1.0D);
             }
         }
 
         @Nullable
         private Vector3d getRandomLocation() {
             Vector3d vector3d;
-            vector3d = FlyEntity.this.getLook(0.0F);
-            Vector3d vector3d2 = RandomPositionGenerator.findAirTarget(FlyEntity.this, 8 , 7, vector3d, (float)Math.PI / 2F, 2, 1);
-            return vector3d2 != null ? vector3d2 : RandomPositionGenerator.findGroundTarget(FlyEntity.this, 8, 4, -2, vector3d, (float)Math.PI / 2F);
+            vector3d = FlyEntity.this.getViewVector(0.0F);
+            Vector3d vector3d2 = RandomPositionGenerator.getAboveLandPos(FlyEntity.this, 8 , 7, vector3d, (float)Math.PI / 2F, 2, 1);
+            return vector3d2 != null ? vector3d2 : RandomPositionGenerator.getAirPos(FlyEntity.this, 8, 4, -2, vector3d, (float)Math.PI / 2F);
         }
     }
 
@@ -162,8 +162,8 @@ public class FlyEntity extends AnimalEntity implements IFlyingAnimal {
         }
 
         @Override
-        public boolean shouldExecute() {
-            return super.shouldExecute() && rand.nextBoolean();
+        public boolean canUse() {
+            return super.canUse() && random.nextBoolean();
         }
     }
 }

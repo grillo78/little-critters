@@ -38,8 +38,8 @@ public class MessageCatchEntity implements IMessage<MessageCatchEntity>{
     public void handle(MessageCatchEntity message, Supplier<NetworkEvent.Context> supplier) {
         supplier.get().enqueueWork(()->{
             PlayerEntity playerEntity = supplier.get().getSender();
-            World world = supplier.get().getSender().world;
-            LivingEntity entity = (LivingEntity) world.getEntityByID(message.entityID);
+            World world = supplier.get().getSender().level;
+            LivingEntity entity = (LivingEntity) world.getEntity(message.entityID);
             ItemStack animalStack = new ItemStack(ModItems.ANIMAL);
             animalStack.setTag(new CompoundNBT());
             if(entity.getType() == ModEntities.FIRE_FLY_ENTITY){
@@ -51,7 +51,7 @@ public class MessageCatchEntity implements IMessage<MessageCatchEntity>{
             if(entity.getType() == EntityType.SILVERFISH){
                 animalStack.getTag().putString("animal","silverfish");
             }
-            playerEntity.dropItem(animalStack,false);
+            playerEntity.drop(animalStack,false);
             entity.remove();
         });
         supplier.get().setPacketHandled(true);

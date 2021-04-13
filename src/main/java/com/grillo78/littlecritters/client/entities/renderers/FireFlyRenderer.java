@@ -25,25 +25,25 @@ public class FireFlyRenderer extends MobRenderer<FireFlyEntity, FireFlyModel<Fir
         super(renderManagerIn, new FireFlyModel<>(), 0.1F);
         this.addLayer(new AbstractEyesLayer<FireFlyEntity, FireFlyModel<FireFlyEntity>>(this) {
             @Override
-            public RenderType getRenderType() {
+            public RenderType renderType() {
                 return ModRenderTypes.getBumLayer(RESOURCE_LOCATION_GLOW);
             }
         });
 
     }
 
-    public ResourceLocation getEntityTexture(FireFlyEntity entity) {
+    public ResourceLocation getTextureLocation(FireFlyEntity entity) {
         return RESOURCE_LOCATION;
     }
 
-    protected void preRenderCallback(FireFlyEntity entitylivingbaseIn, MatrixStack matrixStackIn,
+    protected void scale(FireFlyEntity entitylivingbaseIn, MatrixStack matrixStackIn,
                                      float partialTickTime) {
         matrixStackIn.scale(0.1F, 0.1F, 0.1F);
     }
 
     @Override
-    protected void applyRotations(FireFlyEntity entityLiving, MatrixStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
-        super.applyRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
+    protected void setupRotations(FireFlyEntity entityLiving, MatrixStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
+        super.setupRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
 
         switch (entityLiving.getAttachmentFacing()) {
             case DOWN:
@@ -52,27 +52,27 @@ public class FireFlyRenderer extends MobRenderer<FireFlyEntity, FireFlyModel<Fir
             case EAST:
                 matrixStackIn.translate(0.025F, 0.0F, 0.0F);
 
-                matrixStackIn.rotate(Vector3f.XP.rotationDegrees(90.0F));
-                matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(90.0F));
+                matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(90.0F));
+                matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(90.0F));
                 break;
             case WEST:
                 matrixStackIn.translate(-0.025F, 0.0F, 0.0F);
-                matrixStackIn.rotate(Vector3f.XP.rotationDegrees(90.0F));
-                matrixStackIn.rotate(Vector3f.ZN.rotationDegrees(90.0F));
+                matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(90.0F));
+                matrixStackIn.mulPose(Vector3f.ZN.rotationDegrees(90.0F));
 
                 break;
             case NORTH:
                 matrixStackIn.translate(0.0F, 0.0F, -0.025F);
-                matrixStackIn.rotate(Vector3f.XP.rotationDegrees(90.0F));
+                matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(90.0F));
                 break;
             case SOUTH:
                 matrixStackIn.translate(0.0F, 0.0F, 0.025F);
-                matrixStackIn.rotate(Vector3f.XP.rotationDegrees(90.0F));
-                matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(180.0F));
+                matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(90.0F));
+                matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
                 break;
             case UP:
                 matrixStackIn.translate(0.0F, 0.0F, 0.0F);
-                matrixStackIn.rotate(Vector3f.XP.rotationDegrees(180.0F));
+                matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(180.0F));
         }
     }
 

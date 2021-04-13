@@ -20,11 +20,11 @@ public class FlyRenderer extends MobRenderer<FlyEntity, FlyModel<FlyEntity>> {
 
     }
 
-    public ResourceLocation getEntityTexture(FlyEntity entity) {
+    public ResourceLocation getTextureLocation(FlyEntity entity) {
         return RESOURCE_LOCATION;
     }
 
-    protected void preRenderCallback(FlyEntity entitylivingbaseIn, MatrixStack matrixStackIn,
+    protected void scale(FlyEntity entitylivingbaseIn, MatrixStack matrixStackIn,
                                      float partialTickTime) {
         matrixStackIn.scale(0.05F, 0.05F, 0.05F);
         matrixStackIn.translate(0,-0.1,0);

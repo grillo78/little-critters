@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(MonsterEntity.class)
 public abstract class MixinMonsterEntity {
 
-    @Inject(method = "Lnet/minecraft/entity/monster/MonsterEntity;isDespawnPeaceful()Z", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "shouldDespawnInPeaceful", at = @At("RETURN"), cancellable = true)
     public void isInRangeToRenderDist(CallbackInfoReturnable callbackInfoReturnable) {
         if (((MonsterEntity)(Object) this).getType() == EntityType.SILVERFISH) {
             callbackInfoReturnable.setReturnValue(false);

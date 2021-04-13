@@ -13,17 +13,20 @@ public class ModEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES,
             LittleCritters.MOD_ID);
 
-    public static final EntityType<FireFlyEntity> FIRE_FLY_ENTITY = register("firefly", EntityType.Builder.<FireFlyEntity>create(FireFlyEntity::new, EntityClassification.AMBIENT).size(0.05F, 0.05F).build(LittleCritters.MOD_ID + ":fire_fly"));
-    public static final EntityType<FlyEntity> FLY_ENTITY = register("fly", EntityType.Builder.<FlyEntity>create(FlyEntity::new, EntityClassification.AMBIENT).size(0.05F, 0.05F).build(LittleCritters.MOD_ID + ":fly"));
+    public static final EntityType<FireFlyEntity> FIRE_FLY_ENTITY = register("firefly", EntityType.Builder.<FireFlyEntity>of(FireFlyEntity::new, EntityClassification.AMBIENT).sized(0.05F, 0.05F).build(LittleCritters.MOD_ID + ":fire_fly"));
+    public static final EntityType<FlyEntity> FLY_ENTITY = register("fly", EntityType.Builder.<FlyEntity>of(FlyEntity::new, EntityClassification.AMBIENT).sized(0.05F, 0.05F).build(LittleCritters.MOD_ID + ":fly"));
+    public static final EntityType<AntEntity> ANT_ENTITY = register("ant", EntityType.Builder.<AntEntity>of(AntEntity::new, EntityClassification.AMBIENT).sized(0.05F, 0.05F).build(LittleCritters.MOD_ID + ":fly"));
 
     public static void initEntityAttributes() {
-        GlobalEntityTypeAttributes.put(FIRE_FLY_ENTITY, FireFlyEntity.setFireFlyAttributes().create());
-        GlobalEntityTypeAttributes.put(FLY_ENTITY, FlyEntity.setFlyAttributes().create());
+        GlobalEntityTypeAttributes.put(FIRE_FLY_ENTITY, FireFlyEntity.setFireFlyAttributes().build());
+        GlobalEntityTypeAttributes.put(FLY_ENTITY, FlyEntity.setFlyAttributes().build());
+        GlobalEntityTypeAttributes.put(ANT_ENTITY, AntEntity.setAntAttributes().build());
     }
 
     public static void registerSpawnPlacement() {
         EntitySpawnPlacementRegistry.register(FIRE_FLY_ENTITY, EntitySpawnPlacementRegistry.PlacementType.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, FireFlyEntity::canSpawn);
         EntitySpawnPlacementRegistry.register(FLY_ENTITY, EntitySpawnPlacementRegistry.PlacementType.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, FlyEntity::canSpawn);
+        EntitySpawnPlacementRegistry.register(ANT_ENTITY, EntitySpawnPlacementRegistry.PlacementType.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AntEntity::canSpawn);
     }
 
     private static <T extends EntityType> T register(String name, T entity) {

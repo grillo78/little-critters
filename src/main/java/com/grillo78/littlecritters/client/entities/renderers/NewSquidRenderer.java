@@ -18,25 +18,25 @@ public class NewSquidRenderer extends MobRenderer<SquidEntity, SquidModel<SquidE
         super(renderManagerIn, new SquidModel(), 0.05F);
     }
 
-    protected void applyRotations(SquidEntity entityLiving, MatrixStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
-        float f = MathHelper.lerp(partialTicks, entityLiving.prevSquidPitch, entityLiving.squidPitch);
-        float f1 = MathHelper.lerp(partialTicks, entityLiving.prevSquidYaw, entityLiving.squidYaw);
+    protected void setupRotations(SquidEntity entityLiving, MatrixStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
+        float f = MathHelper.lerp(partialTicks, entityLiving.xBodyRotO, entityLiving.xBodyRot);
+        float f1 = MathHelper.lerp(partialTicks, entityLiving.zBodyRotO, entityLiving.zBodyRot);
         matrixStackIn.translate(0.0D, 0.D, 0.0D);
-        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180.0F - rotationYaw));
-        matrixStackIn.rotate(Vector3f.XP.rotationDegrees(f));
-        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(f1));
+        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(180.0F - rotationYaw));
+        matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(f));
+        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(f1));
         matrixStackIn.scale(0.4F,0.4F,0.4F);
     }
 
     /**
      * Defines what float the third param in setRotationAngles of ModelBase is
      */
-    protected float handleRotationFloat(SquidEntity livingBase, float partialTicks) {
-        return MathHelper.lerp(partialTicks, livingBase.lastTentacleAngle, livingBase.tentacleAngle);
+    protected float getBob(SquidEntity livingBase, float partialTicks) {
+        return MathHelper.lerp(partialTicks, livingBase.oldTentacleAngle, livingBase.tentacleAngle);
     }
 
     @Override
-    public ResourceLocation getEntityTexture(SquidEntity entity) {
+    public ResourceLocation getTextureLocation(SquidEntity entity) {
         return ENTITY_TEXTURE;
     }
 }

@@ -13,9 +13,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class MixinClientEntity {
 
     @OnlyIn(Dist.CLIENT)
-    @Inject(method = "Lnet/minecraft/entity/Entity;isInRangeToRenderDist(D)Z", at = @At("RETURN"), cancellable = true)
-    public void isInRangeToRenderDist(double distance, CallbackInfoReturnable callbackInfoReturnable){
-        if(((Entity)(Object)this).world.isRemote){
+    @Inject(method = "shouldRenderAtSqrDistance", at = @At("RETURN"), cancellable = true)
+    public void shouldRenderAtSqrDistance(double distance, CallbackInfoReturnable callbackInfoReturnable){
+        if(((Entity)(Object)this).level.isClientSide){
             if(((Entity)(Object)this).getType() == EntityType.BEE || ((Entity)(Object)this).getType() == EntityType.SILVERFISH){
                 callbackInfoReturnable.setReturnValue(distance<4600);
             }

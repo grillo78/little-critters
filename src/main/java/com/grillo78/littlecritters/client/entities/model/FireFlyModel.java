@@ -28,139 +28,139 @@ public class FireFlyModel<T extends FireFlyEntity> extends SegmentedModel<T> {
     private float bodyPitch;
 
     public FireFlyModel() {
-        textureWidth = 64;
-        textureHeight = 32;
+        texWidth = 64;
+        texHeight = 32;
 
         Body = new ModelRenderer(this);
-        Body.setRotationPoint(0.0F, 19.5F, 0.0F);
-        Body.setTextureOffset(3, 3).addBox(-3.0F, -1.5F, -4.0F, 6.0F, 3.0F, 5.0F, 0.0F, false);
+        Body.setPos(0.0F, 19.5F, 0.0F);
+        Body.texOffs(3, 3).addBox(-3.0F, -1.5F, -4.0F, 6.0F, 3.0F, 5.0F, 0.0F, false);
 
         Leg3 = new ModelRenderer(this);
-        Leg3.setRotationPoint(0.0F, 1.5F, 0.0F);
+        Leg3.setPos(0.0F, 1.5F, 0.0F);
         Body.addChild(Leg3);
         setRotationAngle(Leg3, 0.7854F, 0.0F, 0.0F);
-        Leg3.setTextureOffset(0, 24).addBox(1.0F, -0.15F, 0.0F, 1.0F, 3.0F, 1.0F, -0.15F, false);
-        Leg3.setTextureOffset(0, 24).addBox(-2.0F, -0.15F, 0.0F, 1.0F, 3.0F, 1.0F, -0.15F, true);
+        Leg3.texOffs(0, 24).addBox(1.0F, -0.15F, 0.0F, 1.0F, 3.0F, 1.0F, -0.15F, false);
+        Leg3.texOffs(0, 24).addBox(-2.0F, -0.15F, 0.0F, 1.0F, 3.0F, 1.0F, -0.15F, true);
 
         Bum = new ModelRenderer(this);
-        Bum.setRotationPoint(0.0F, -0.5F, 1.0F);
+        Bum.setPos(0.0F, -0.5F, 1.0F);
         Body.addChild(Bum);
-        Bum.setTextureOffset(25, 8).addBox(-3.0F, -1.0F, 0.0F, 6.0F, 3.0F, 3.0F, 0.0F, false);
+        Bum.texOffs(25, 8).addBox(-3.0F, -1.0F, 0.0F, 6.0F, 3.0F, 3.0F, 0.0F, false);
 
         LWing = new ModelRenderer(this);
-        LWing.setRotationPoint(1.0F, -1.5F, -1.0F);
+        LWing.setPos(1.0F, -1.5F, -1.0F);
         Body.addChild(LWing);
         setRotationAngle(LWing, 0.0F, 0.0F, -0.3927F);
-        LWing.setTextureOffset(0, 19).addBox(0.0F, 0.0F, 0.0F, 6.0F, 1.0F, 4.0F, 0.0F, false);
+        LWing.texOffs(0, 19).addBox(0.0F, 0.0F, 0.0F, 6.0F, 1.0F, 4.0F, 0.0F, false);
 
         Antenne = new ModelRenderer(this);
-        Antenne.setRotationPoint(0.0F, -0.5F, -4.0F);
+        Antenne.setPos(0.0F, -0.5F, -4.0F);
         Body.addChild(Antenne);
         setRotationAngle(Antenne, -0.7854F, 0.0F, 0.0F);
-        Antenne.setTextureOffset(20, 0).addBox(-3.0F, 0.0F, -5.0F, 6.0F, 1.0F, 5.0F, 0.0F, false);
+        Antenne.texOffs(20, 0).addBox(-3.0F, 0.0F, -5.0F, 6.0F, 1.0F, 5.0F, 0.0F, false);
 
         RWing = new ModelRenderer(this);
-        RWing.setRotationPoint(-1.0F, -1.5F, -1.0F);
+        RWing.setPos(-1.0F, -1.5F, -1.0F);
         Body.addChild(RWing);
         setRotationAngle(RWing, 0.0F, 0.0F, 0.3927F);
-        RWing.setTextureOffset(0, 19).addBox(-6.0F, 0.0F, 0.0F, 6.0F, 1.0F, 4.0F, 0.0F, true);
+        RWing.texOffs(0, 19).addBox(-6.0F, 0.0F, 0.0F, 6.0F, 1.0F, 4.0F, 0.0F, true);
 
         LWingcase = new ModelRenderer(this);
-        LWingcase.setRotationPoint(0.0F, -1.5F, -2.0F);
+        LWingcase.setPos(0.0F, -1.5F, -2.0F);
         Body.addChild(LWingcase);
         setRotationAngle(LWingcase, 0.0F, -1.5708F, -0.7854F);
-        LWingcase.setTextureOffset(0, 11).addBox(0.0F, 0.0F, -6.0F, 3.0F, 2.0F, 6.0F, 0.0F, false);
+        LWingcase.texOffs(0, 11).addBox(0.0F, 0.0F, -6.0F, 3.0F, 2.0F, 6.0F, 0.0F, false);
 
         RWingcase = new ModelRenderer(this);
-        RWingcase.setRotationPoint(0.0F, -1.5F, -2.0F);
+        RWingcase.setPos(0.0F, -1.5F, -2.0F);
         Body.addChild(RWingcase);
         setRotationAngle(RWingcase, 0.0F, 1.5708F, 0.8196F);
-        RWingcase.setTextureOffset(0, 11).addBox(-3.0F, 0.0F, -6.0F, 3.0F, 2.0F, 6.0F, 0.0F, true);
+        RWingcase.texOffs(0, 11).addBox(-3.0F, 0.0F, -6.0F, 3.0F, 2.0F, 6.0F, 0.0F, true);
 
         Leg2 = new ModelRenderer(this);
-        Leg2.setRotationPoint(0.0F, 1.5F, -1.0F);
+        Leg2.setPos(0.0F, 1.5F, -1.0F);
         Body.addChild(Leg2);
         setRotationAngle(Leg2, 0.3927F, 0.0F, 0.0F);
-        Leg2.setTextureOffset(0, 24).addBox(1.0F, -0.15F, 0.0F, 1.0F, 3.0F, 1.0F, -0.15F, false);
-        Leg2.setTextureOffset(0, 24).addBox(-2.0F, -0.15F, 0.0F, 1.0F, 3.0F, 1.0F, -0.15F, true);
+        Leg2.texOffs(0, 24).addBox(1.0F, -0.15F, 0.0F, 1.0F, 3.0F, 1.0F, -0.15F, false);
+        Leg2.texOffs(0, 24).addBox(-2.0F, -0.15F, 0.0F, 1.0F, 3.0F, 1.0F, -0.15F, true);
 
         Leg1 = new ModelRenderer(this);
-        Leg1.setRotationPoint(0.0F, 1.5F, -2.0F);
+        Leg1.setPos(0.0F, 1.5F, -2.0F);
         Body.addChild(Leg1);
         setRotationAngle(Leg1, 0.2051F, 0.0F, 0.0F);
-        Leg1.setTextureOffset(0, 24).addBox(1.0F, -0.15F, 0.0F, 1.0F, 3.0F, 1.0F, -0.15F, false);
-        Leg1.setTextureOffset(0, 24).addBox(-2.0F, -0.15F, 0.0F, 1.0F, 3.0F, 1.0F, -0.15F, true);
+        Leg1.texOffs(0, 24).addBox(1.0F, -0.15F, 0.0F, 1.0F, 3.0F, 1.0F, -0.15F, false);
+        Leg1.texOffs(0, 24).addBox(-2.0F, -0.15F, 0.0F, 1.0F, 3.0F, 1.0F, -0.15F, true);
     }
 
     public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-        modelRenderer.rotateAngleX = x;
-        modelRenderer.rotateAngleY = y;
-        modelRenderer.rotateAngleZ = z;
+        modelRenderer.xRot = x;
+        modelRenderer.yRot = y;
+        modelRenderer.zRot = z;
     }
 
     @Override
-    public void setLivingAnimations(T entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
-        this.bodyPitch = entityIn.getPitch(partialTick);
-        super.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
+    public void prepareMobModel(T entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
+        this.bodyPitch = entityIn.getViewXRot(partialTick);
+        super.prepareMobModel(entityIn, limbSwing, limbSwingAmount, partialTick);
     }
 
     @Override
-    public Iterable<ModelRenderer> getParts() {
+    public Iterable<ModelRenderer> parts() {
         return ImmutableList.of(this.Body);
     }
 
     @Override
-    public void setRotationAngles(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks,
+    public void setupAnim(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks,
                                   float netHeadYaw, float headPitch) {
-        this.RWing.rotateAngleX = 0.0F;
-        this.Antenne.rotateAngleX = 0.0F;
-        this.Body.rotateAngleX = 0.0F;
-        this.Body.rotationPointY = 19.0F;// 19
-        boolean flag = entityIn.isOnGround() && entityIn.getMotion().lengthSquared() < 1.0E-7D;
+        this.RWing.xRot = 0.0F;
+        this.Antenne.xRot = 0.0F;
+        this.Body.xRot = 0.0F;
+        this.Body.y = 19.0F;// 19
+        boolean flag = entityIn.isOnGround() && entityIn.getDeltaMovement().lengthSqr() < 1.0E-7D;
 
         if (entityIn.getAttachmentPos() == null) {
             if (flag) {
-                this.RWing.rotateAngleY = -0.2618F;
-                this.RWing.rotateAngleZ = 0.0F;
-                this.LWing.rotateAngleX = 0.0F;
-                this.LWing.rotateAngleY = 0.2618F;
-                this.LWing.rotateAngleZ = 0.0F;
-                this.Leg1.rotateAngleX = 0.0F;
-                this.Leg2.rotateAngleX = 0.0F;
-                this.Leg3.rotateAngleX = 0.0F;
+                this.RWing.yRot = -0.2618F;
+                this.RWing.zRot = 0.0F;
+                this.LWing.xRot = 0.0F;
+                this.LWing.yRot = 0.2618F;
+                this.LWing.zRot = 0.0F;
+                this.Leg1.xRot = 0.0F;
+                this.Leg2.xRot = 0.0F;
+                this.Leg3.xRot = 0.0F;
             } else {
                 float f = ageInTicks * 2.1F;
-                this.RWing.rotateAngleY = 0.0F;
-                this.RWing.rotateAngleZ = MathHelper.cos(f) * (float) Math.PI * 0.15F;
-                this.LWing.rotateAngleX = this.RWing.rotateAngleX;
-                this.LWing.rotateAngleY = this.RWing.rotateAngleY;
-                this.LWing.rotateAngleZ = -this.RWing.rotateAngleZ;
-                this.Leg1.rotateAngleX = ((float) Math.PI / 4F);
-                this.Leg2.rotateAngleX = ((float) Math.PI / 4F);
-                this.Leg3.rotateAngleX = ((float) Math.PI / 4F);
-                this.Body.rotateAngleX = 0.0F;
-                this.Body.rotateAngleY = 0.0F;
-                this.Body.rotateAngleZ = 0.0F;
+                this.RWing.yRot = 0.0F;
+                this.RWing.zRot = MathHelper.cos(f) * (float) Math.PI * 0.15F;
+                this.LWing.xRot = this.RWing.xRot;
+                this.LWing.yRot = this.RWing.yRot;
+                this.LWing.zRot = -this.RWing.zRot;
+                this.Leg1.xRot = ((float) Math.PI / 4F);
+                this.Leg2.xRot = ((float) Math.PI / 4F);
+                this.Leg3.xRot = ((float) Math.PI / 4F);
+                this.Body.xRot = 0.0F;
+                this.Body.yRot = 0.0F;
+                this.Body.zRot = 0.0F;
             }
-            this.Body.rotateAngleX = 0.0F;
-            this.Body.rotateAngleY = 0.0F;
-            this.Body.rotateAngleZ = 0.0F;
+            this.Body.xRot = 0.0F;
+            this.Body.yRot = 0.0F;
+            this.Body.zRot = 0.0F;
             if (!flag) {
                 float f1 = MathHelper.cos(ageInTicks * 0.18F);
-                this.Body.rotateAngleX = 0.1F + f1 * (float) Math.PI * 0.025F;
-                this.Antenne.rotateAngleX = f1 * (float) Math.PI * 0.03F;
-                this.Leg1.rotateAngleX = -f1 * (float) Math.PI * 0.1F + ((float) Math.PI / 8F);
-                this.Leg3.rotateAngleX = -f1 * (float) Math.PI * 0.05F + ((float) Math.PI / 4F);
-                this.Body.rotationPointY = 19.0F - MathHelper.cos(ageInTicks * 0.18F) * 0.9F;
+                this.Body.xRot = 0.1F + f1 * (float) Math.PI * 0.025F;
+                this.Antenne.xRot = f1 * (float) Math.PI * 0.03F;
+                this.Leg1.xRot = -f1 * (float) Math.PI * 0.1F + ((float) Math.PI / 8F);
+                this.Leg3.xRot = -f1 * (float) Math.PI * 0.05F + ((float) Math.PI / 4F);
+                this.Body.y = 19.0F - MathHelper.cos(ageInTicks * 0.18F) * 0.9F;
             }
 
             if (this.bodyPitch > 0.0F) {
-                this.Body.rotateAngleX = ModelUtils.func_228283_a_(this.Body.rotateAngleX, 3.0915928F, this.bodyPitch);
+                this.Body.xRot = ModelUtils.rotlerpRad(this.Body.xRot, 3.0915928F, this.bodyPitch);
             }
 
-            this.Leg1.showModel = true;
-            this.Leg2.showModel = true;
-            this.Leg3.showModel = true;
+            this.Leg1.visible = true;
+            this.Leg2.visible = true;
+            this.Leg3.visible = true;
         }
     }
 

@@ -9,6 +9,8 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.world.World;
 
+import net.minecraft.item.Item.Properties;
+
 public class AnimalItem extends Item {
 
     public AnimalItem(Properties properties) {
@@ -16,10 +18,10 @@ public class AnimalItem extends Item {
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext context) {
-        World world = context.getWorld();
-        ItemStack stack = context.getItem();
-        if (!world.isRemote) {
+    public ActionResultType useOn(ItemUseContext context) {
+        World world = context.getLevel();
+        ItemStack stack = context.getItemInHand();
+        if (!world.isClientSide) {
             Entity entity;
             switch (stack.getTag().getString("animal")) {
                 case "firefly":
@@ -34,8 +36,8 @@ public class AnimalItem extends Item {
                 default:
                     throw new IllegalStateException("Unexpected value: " + stack.getTag().getString("animal"));
             }
-            entity.setPositionAndRotation(context.getPos().up().getX() + 0.5, context.getPos().up().getY(), context.getPos().up().getZ() + 0.5, 0, 0);
-            world.addEntity(entity);
+            entity.absMoveTo(context.getClickedPos().above().getX() + 0.5, context.getClickedPos().above().getY(), context.getClickedPos().above().getZ() + 0.5, 0, 0);
+            world.addFreshEntity(entity);
             return ActionResultType.CONSUME;
         }
         return ActionResultType.SUCCESS;

@@ -15,6 +15,8 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 
+import net.minecraft.item.Item.Properties;
+
 public class BugNetItem extends Item {
 
     private ArrayList<EntityType> catchable;
@@ -25,18 +27,18 @@ public class BugNetItem extends Item {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        if (worldIn.isRemote) {
-            ItemStack itemstack = playerIn.getHeldItem(handIn);
-            RayTraceResult result = Minecraft.getInstance().objectMouseOver;
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        if (worldIn.isClientSide) {
+            ItemStack itemstack = playerIn.getItemInHand(handIn);
+            RayTraceResult result = Minecraft.getInstance().hitResult;
             if (result instanceof EntityRayTraceResult) {
                 if (catchable.contains(((EntityRayTraceResult)result).getEntity().getType())){
-                    PacketHandler.instance.sendToServer(new MessageCatchEntity(((EntityRayTraceResult)result).getEntity().getEntityId()));
-                    return ActionResult.resultSuccess(itemstack);
+                    PacketHandler.instance.sendToServer(new MessageCatchEntity(((EntityRayTraceResult)result).getEntity().getId()));
+                    return ActionResult.success(itemstack);
                 }
             }
 
         }
-        return super.onItemRightClick(worldIn, playerIn, handIn);
+        return super.use(worldIn, playerIn, handIn);
     }
 }

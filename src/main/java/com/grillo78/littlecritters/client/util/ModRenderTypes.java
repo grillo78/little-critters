@@ -13,8 +13,8 @@ public class ModRenderTypes extends RenderType {
 
     public static RenderType getBumLayer(ResourceLocation locationIn) {
         RenderState.TextureState renderstate$texturestate = new RenderState.TextureState(locationIn, false, false);
-        return makeType("eyes", DefaultVertexFormats.ENTITY, 7, 256, false, true,
-                RenderType.State.getBuilder().texture(renderstate$texturestate).transparency(ADDITIVE_TRANSPARENCY)
-                        .alpha(DEFAULT_ALPHA).writeMask(COLOR_WRITE).fog(BLACK_FOG).build(false));
+        return create("eyes", DefaultVertexFormats.NEW_ENTITY, 7, 256, false, true,
+                RenderType.State.builder().setTextureState(renderstate$texturestate).setTransparencyState(ADDITIVE_TRANSPARENCY)
+                        .setAlphaState(DEFAULT_ALPHA).setWriteMaskState(COLOR_WRITE).setFogState(BLACK_FOG).createCompositeState(false));
     }
 }

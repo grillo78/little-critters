@@ -34,9 +34,9 @@ public class AnimalItemStackTileEntityRenderer extends ItemStackTileEntityRender
     }
 
     @Override
-    public void func_239207_a_(ItemStack stack, ItemCameraTransforms.TransformType p_239207_2_, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
-        super.func_239207_a_(stack, p_239207_2_, matrixStack, buffer, combinedLight, combinedOverlay);
-        matrixStack.push();
+    public void renderByItem(ItemStack stack, ItemCameraTransforms.TransformType p_239207_2_, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+        super.renderByItem(stack, p_239207_2_, matrixStack, buffer, combinedLight, combinedOverlay);
+        matrixStack.pushPose();
         switch (p_239207_2_) {
             case GUI:
                 matrixStack.translate(0.5, 3, 0.5);
@@ -46,8 +46,8 @@ public class AnimalItemStackTileEntityRenderer extends ItemStackTileEntityRender
                 matrixStack.translate(0.5, 1, 0.5);
                 matrixStack.scale(0.25F, 0.25F, 0.25F);
         }
-        matrixStack.rotate(new Quaternion(180, 0, 0, true));
-        models.get(stack.getTag().getString("animal")).render(matrixStack, buffer.getBuffer(RenderType.getEntityTranslucent(textures.get(stack.getTag().getString("animal")))), combinedLight, combinedOverlay, 1, 1, 1, 1);
-        matrixStack.pop();
+        matrixStack.mulPose(new Quaternion(180, 0, 0, true));
+        models.get(stack.getTag().getString("animal")).renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entityTranslucent(textures.get(stack.getTag().getString("animal")))), combinedLight, combinedOverlay, 1, 1, 1, 1);
+        matrixStack.popPose();
     }
 }

@@ -1,5 +1,6 @@
 package com.grillo78.littlecritters;
 
+import com.grillo78.littlecritters.client.entities.renderers.AntRendererFactory;
 import com.grillo78.littlecritters.client.entities.renderers.FireFlyRendererFactory;
 import com.grillo78.littlecritters.client.entities.renderers.FlyRendererFactory;
 import com.grillo78.littlecritters.client.entities.renderers.NewSquidRenderer;
@@ -54,9 +55,9 @@ public class LittleCritters {
 
     private void setup(FMLCommonSetupEvent event) {
         PacketHandler.init();
-        EntityType.BEE.size = EntitySize.flexible(0.1F, 0.1F);
-        EntityType.SILVERFISH.size = EntitySize.flexible(0.1F, 0.1F);
-        EntityType.SQUID.size = EntitySize.flexible(0.5F, 0.5F);
+        EntityType.BEE.dimensions = EntitySize.scalable(0.1F, 0.1F);
+        EntityType.SILVERFISH.dimensions = EntitySize.scalable(0.1F, 0.1F);
+        EntityType.SQUID.dimensions = EntitySize.scalable(0.5F, 0.5F);
         event.enqueueWork(() -> {
             ModEntities.initEntityAttributes();
             ModEntities.registerSpawnPlacement();
@@ -71,10 +72,10 @@ public class LittleCritters {
     }
 
     private void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if (!event.getWorld().isRemote) {
+        if (!event.getWorld().isClientSide) {
             if (event.getEntity().getType() == EntityType.BEE || event.getEntity().getType() == EntityType.SILVERFISH || event.getEntity().getType() == EntityType.SQUID) {
                 if (event.getEntity().getType() == EntityType.SILVERFISH) {
-                    ((SilverfishEntity) event.getEntity()).targetSelector.goals.clear();
+                    ((SilverfishEntity) event.getEntity()).targetSelector.availableGoals.clear();
                 }
                 setAttribute(((LivingEntity) event.getEntity()), "custom_max_health", Attributes.MAX_HEALTH, UUID.fromString("cbc6c4d8-03e2-4e7e-bcdf-fa9266f33195"), -(((CreatureEntity) event.getEntity()).getMaxHealth() - 0.5), AttributeModifier.Operation.ADDITION);
                 if (((CreatureEntity) event.getEntity()).getHealth() > 1)
@@ -92,7 +93,7 @@ public class LittleCritters {
 
             if (modifier == null) {
                 modifier = new AttributeModifier(uuid, name, amount, operation);
-                instance.applyNonPersistentModifier(modifier);
+                instance.addTransientModifier(modifier);
             }
         }
     }
@@ -101,25 +102,26 @@ public class LittleCritters {
     private void doClientStuff(FMLClientSetupEvent event) {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.FIRE_FLY_ENTITY, new FireFlyRendererFactory());
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.FLY_ENTITY, new FlyRendererFactory());
-        Minecraft.getInstance().getRenderManager().renderers.put(EntityType.SQUID, new NewSquidRenderer(Minecraft.getInstance().getRenderManager()));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ANT_ENTITY, new AntRendererFactory());
+        Minecraft.getInstance().getEntityRenderDispatcher().renderers.put(EntityType.SQUID, new NewSquidRenderer(Minecraft.getInstance().getEntityRenderDispatcher()));
     }
 
     @OnlyIn(Dist.CLIENT)
     private void onPreEntityRender(RenderLivingEvent.Pre event) {
-        event.getMatrixStack().push();
+        event.getMatrixStack().pushPose();
         if (event.getEntity().getType() == EntityType.BEE) {
-            event.getRenderer().shadowSize *= 0.05F;
+            event.getRenderer().shadowRadius *= 0.05F;
             event.getMatrixStack().scale(0.05F, 0.05F, 0.05F);
         }
         if (event.getEntity().getType() == EntityType.SILVERFISH) {
-            event.getRenderer().shadowSize *= 0.05F;
+            event.getRenderer().shadowRadius *= 0.05F;
             event.getMatrixStack().scale(0.1F, 0.1F, 0.1F);
         }
     }
 
     @OnlyIn(Dist.CLIENT)
     private void onPostEntityRender(RenderLivingEvent.Post event) {
-        event.getMatrixStack().pop();
+        event.getMatrixStack().popPose();
     }
 
 }
