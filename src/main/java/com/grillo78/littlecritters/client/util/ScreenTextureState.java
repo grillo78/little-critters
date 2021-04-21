@@ -66,28 +66,26 @@ public class ScreenTextureState extends RenderState.TexturingState
         return this.textureId;
     }
 
-    private void onRenderWorldLast(RenderWorldLastEvent event)
-    {
+    private void onRenderWorldLast(RenderWorldLastEvent event) {
 
-        MainWindow mainWindow = Minecraft.getInstance().getWindow();
+        if (!OptifineHelper.isShadersEnabled()) {
+            MainWindow mainWindow = Minecraft.getInstance().getWindow();
 
-        // OpenGL will spit out an error (GL_INVALID_VALUE) if the window is minimised (or draw calls stop)
-        // It seems just testing the width or height if it's zero is enough to prevent it
-        if(mainWindow.getWidth() <= 0 || mainWindow.getHeight() <= 0)
-            return;
+            // OpenGL will spit out an error (GL_INVALID_VALUE) if the window is minimised (or draw calls stop)
+            // It seems just testing the width or height if it's zero is enough to prevent it
+            if (mainWindow.getWidth() <= 0 || mainWindow.getHeight() <= 0)
+                return;
 
-        RenderSystem.bindTexture(this.getTextureId());
-        if(mainWindow.getWidth() != this.lastWindowWidth || mainWindow.getHeight() != this.lastWindowHeight)
-        {
-            // When window resizes the texture needs to be re-initialized and copied, so both are done in the same call
-            this.lastWindowWidth = mainWindow.getWidth();
-            this.lastWindowHeight = mainWindow.getHeight();
-            glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, mainWindow.getWidth(), mainWindow.getHeight(), 0);
-        }
-        else
-        {
-            // Copy sub-image is faster than copy because the texture does not need to be initialized
-            glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, mainWindow.getWidth(), mainWindow.getHeight());
+            RenderSystem.bindTexture(this.getTextureId());
+            if (mainWindow.getWidth() != this.lastWindowWidth || mainWindow.getHeight() != this.lastWindowHeight) {
+                // When window resizes the texture needs to be re-initialized and copied, so both are done in the same call
+                this.lastWindowWidth = mainWindow.getWidth();
+                this.lastWindowHeight = mainWindow.getHeight();
+                glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, mainWindow.getWidth(), mainWindow.getHeight(), 0);
+            } else {
+                // Copy sub-image is faster than copy because the texture does not need to be initialized
+                glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, mainWindow.getWidth(), mainWindow.getHeight());
+            }
         }
     }
 }

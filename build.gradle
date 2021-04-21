@@ -16,7 +16,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 
-version = '0.0.1'
+version = '0.0.2'
 group = 'com.grillo78.littlecritters' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'little_critters'
 
@@ -94,12 +94,14 @@ repositories {
     maven {
         url "https://www.cursemaven.com"
     }
+    maven { url = "https://maven.hypherionmc.me" }
 }
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.0.14'
     compile 'org.spongepowered:mixin:0.8'
     compile fg.deobf('curse.maven:neat-238372:3182258')
+    implementation 'net.hypherionmc:HyperLightingCore-1.16.3:1.0.3:api'
 
 }
 
@@ -114,7 +116,7 @@ jar {
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"little_critterssareus",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-            "MixinConfigs"            : "little_critters.mixins.json"
+            "MixinConfigs": "little_critters.mixins.json"
         ])
     }
 }

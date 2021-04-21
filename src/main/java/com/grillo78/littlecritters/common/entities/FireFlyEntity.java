@@ -1,5 +1,6 @@
 package com.grillo78.littlecritters.common.entities;
 
+import com.grillo78.littlecritters.client.util.HypherionLightingCoreUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -36,6 +37,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.ModList;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
@@ -51,6 +53,9 @@ public class FireFlyEntity extends AnimalEntity implements IFlyingAnimal {
 
     public FireFlyEntity(EntityType<? extends FireFlyEntity> type, World worldIn) {
         super(type, worldIn);
+        if (ModList.get().isLoaded("hypcore")) {
+            HypherionLightingCoreUtil.registerLightProvider(this);
+        }
         this.moveControl = new FlyingMovementController(this, 20, true);
         this.lookControl = new LookController(this);
         this.setPathfindingMalus(PathNodeType.DANGER_FIRE, -1.0F);
@@ -59,8 +64,6 @@ public class FireFlyEntity extends AnimalEntity implements IFlyingAnimal {
         this.setPathfindingMalus(PathNodeType.COCOA, -1.0F);
         this.setPathfindingMalus(PathNodeType.FENCE, -1.0F);
     }
-
-
 
     @Override
     protected void registerGoals() {
@@ -79,7 +82,7 @@ public class FireFlyEntity extends AnimalEntity implements IFlyingAnimal {
     @OnlyIn(Dist.CLIENT)
     @Override
     public boolean shouldRenderAtSqrDistance(double distance) {
-        return distance<4600;
+        return distance < 4600;
     }
 
     @Override
@@ -337,8 +340,8 @@ public class FireFlyEntity extends AnimalEntity implements IFlyingAnimal {
             Vector3d vector3d;
             vector3d = FireFlyEntity.this.getViewVector(0.0F);
             //4 , 3
-            Vector3d vector3d2 = RandomPositionGenerator.getAboveLandPos(FireFlyEntity.this, 8 , 7, vector3d, (float)Math.PI / 2F, 2, 1);
-            return vector3d2 != null ? vector3d2 : RandomPositionGenerator.getAirPos(FireFlyEntity.this, 8, 4, -2, vector3d, (float)Math.PI / 2F);
+            Vector3d vector3d2 = RandomPositionGenerator.getAboveLandPos(FireFlyEntity.this, 8, 7, vector3d, (float) Math.PI / 2F, 2, 1);
+            return vector3d2 != null ? vector3d2 : RandomPositionGenerator.getAirPos(FireFlyEntity.this, 8, 4, -2, vector3d, (float) Math.PI / 2F);
         }// 																															1,1,-1
     }
 
