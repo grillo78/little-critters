@@ -21,7 +21,7 @@ public class HypherionLightingCoreUtil {
         Light light = null;
 
         if(ent instanceof FireFlyEntity){
-            light = Light.builder().pos(APIUtils.entityPos(ent)).color(0f, 1.0f, 0f, 1.0f).radius(50).build();
+            light = Light.builder().pos(APIUtils.entityPos(ent)).color(0f, 1.0f, 0.1f, 1.0f).radius(1.5F).build();
         }
 
 

@@ -98,8 +98,8 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.5-36.0.14'
-    compile 'org.spongepowered:mixin:0.8'
+    minecraft 'net.minecraftforge:forge:1.16.5-36.1.4'
+    annotationProcessor 'org.spongepowered:mixin:0.8.2:processor'
     compile fg.deobf('curse.maven:neat-238372:3182258')
     implementation 'net.hypherionmc:HyperLightingCore-1.16.3:1.0.3:api'
 
