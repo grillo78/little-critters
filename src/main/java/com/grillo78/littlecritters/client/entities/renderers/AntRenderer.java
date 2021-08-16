@@ -28,17 +28,17 @@ public class AntRenderer extends MobRenderer<AntEntity, AntModel<AntEntity>> {
 
     @Override
     protected void scale(AntEntity antEntity, MatrixStack matrixStackIn, float partialTickTime) {
-        switch (antEntity.getAntType()){
-            case QUEEN:
+//        switch (antEntity.getAntType()){
+//            case QUEEN:
                 matrixStackIn.scale(0.01F, 0.01F, 0.01F);
-                break;
-            case WORKER:
-                matrixStackIn.scale(0.02F, 0.02F, 0.02F);
-                break;
-            case MALE:
-                matrixStackIn.scale(0.02F, 0.02F, 0.02F);
-                break;
-        }
+//                break;
+//            case WORKER:
+//                matrixStackIn.scale(0.02F, 0.02F, 0.02F);
+//                break;
+//            case MALE:
+//                matrixStackIn.scale(0.02F, 0.02F, 0.02F);
+//                break;
+//        }
     }
 
     @Override

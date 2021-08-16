@@ -47,7 +47,8 @@ public class AnimalItemStackTileEntityRenderer extends ItemStackTileEntityRender
                 matrixStack.scale(0.25F, 0.25F, 0.25F);
         }
         matrixStack.mulPose(new Quaternion(180, 0, 0, true));
-        models.get(stack.getTag().getString("animal")).renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entityTranslucent(textures.get(stack.getTag().getString("animal")))), combinedLight, combinedOverlay, 1, 1, 1, 1);
+        if(stack.hasTag() && stack.getTag().contains("animal") && models.containsKey(stack.getTag().getString("animal")))
+            models.get(stack.getTag().getString("animal")).renderToBuffer(matrixStack, buffer.getBuffer(RenderType.entityTranslucent(textures.get(stack.getTag().getString("animal")))), combinedLight, combinedOverlay, 1, 1, 1, 1);
         matrixStack.popPose();
     }
 }

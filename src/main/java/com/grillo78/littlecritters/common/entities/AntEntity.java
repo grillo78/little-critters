@@ -13,6 +13,9 @@ import net.minecraft.entity.ai.goal.RandomWalkingGoal;
 import net.minecraft.entity.monster.SpiderEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.IPacket;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -25,21 +28,23 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class AntEntity extends AnimalEntity {
+public class AntEntity extends AnimalEntity implements IEntityAdditionalSpawnData {
 
     private static final DataParameter<Byte> DATA_FLAGS_ID = EntityDataManager.defineId(SpiderEntity.class, DataSerializers.BYTE);
-    private AntTypes antType;
+    private AntTypes antType = AntTypes.QUEEN;
 
     protected AntEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
-        this(type, worldIn, AntTypes.QUEEN);
+        super(type, worldIn);
     }
 
     protected AntEntity(EntityType<? extends AnimalEntity> type, World worldIn, AntTypes antType) {
-        super(type, worldIn);
+        this(type, worldIn);
         this.antType = antType;
     }
 
@@ -117,6 +122,11 @@ public class AntEntity extends AnimalEntity {
         return distance < 4600;
     }
 
+    @Override
+    public IPacket<?> getAddEntityPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
     public void push(Entity entityIn) {
     }
 
@@ -130,6 +140,31 @@ public class AntEntity extends AnimalEntity {
             return false;
         }
         return super.hurt(dmg, i);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
+        if(compound.contains("antType"))
+            antType = AntTypes.valueOf(compound.getString("antType"));
+    }
+
+    @Override
+    public void writeSpawnData(PacketBuffer buffer) {
+        CompoundNBT compound = new CompoundNBT();
+        addAdditionalSaveData(compound);
+        buffer.writeNbt(compound);
+    }
+
+    @Override
+    public void readSpawnData(PacketBuffer additionalData) {
+        readAdditionalSaveData(additionalData.readAnySizeNbt());
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putString("antType", antType.name());
     }
 
     @Override

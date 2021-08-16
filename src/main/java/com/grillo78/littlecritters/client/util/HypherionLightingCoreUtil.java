@@ -5,10 +5,6 @@ import net.hypherionmc.hypcore.api.APIUtils;
 import net.hypherionmc.hypcore.api.ColoredLightManager;
 import net.hypherionmc.hypcore.api.Light;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.vector.Vector3d;
-
-import java.util.concurrent.atomic.AtomicReference;
 
 public class HypherionLightingCoreUtil {
 

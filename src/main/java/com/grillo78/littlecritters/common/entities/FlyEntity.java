@@ -87,8 +87,8 @@ public class FlyEntity extends AnimalEntity implements IFlyingAnimal {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new FollowPigGoal(this,1.0D, 0.25F, 10.0F, PigEntity.class));
-        this.goalSelector.addGoal(0, new FollowPigGoal(this,1.0D, 0.25F, 10.0F, HorseEntity.class));
+        this.goalSelector.addGoal(0, new FollowEntityGoal(this,1.0D, 0.25F, 10.0F, PigEntity.class));
+        this.goalSelector.addGoal(0, new FollowEntityGoal(this,1.0D, 0.25F, 10.0F, HorseEntity.class));
         this.goalSelector.addGoal(1, new WanderGoal());
         this.goalSelector.addGoal(2, new SwimGoal(this));
     }
@@ -152,9 +152,9 @@ public class FlyEntity extends AnimalEntity implements IFlyingAnimal {
         }
     }
 
-    class FollowPigGoal extends FollowMobGoal {
+    class FollowEntityGoal extends FollowMobGoal {
 
-        public FollowPigGoal(MobEntity entity, double speedModifier, float stopDistance, float areaSize, Class clazz) {
+        public FollowEntityGoal(MobEntity entity, double speedModifier, float stopDistance, float areaSize, Class clazz) {
             super(entity, speedModifier, stopDistance, areaSize);
             this.followPredicate = (p_210291_1_) -> {
                 return p_210291_1_ != null && clazz == p_210291_1_.getClass();
