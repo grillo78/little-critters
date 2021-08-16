@@ -34,7 +34,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class AntEntity extends AnimalEntity implements IEntityAdditionalSpawnData {
+public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditionalSpawnData {
 
     private static final DataParameter<Byte> DATA_FLAGS_ID = EntityDataManager.defineId(SpiderEntity.class, DataSerializers.BYTE);
     private AntTypes antType = AntTypes.QUEEN;
