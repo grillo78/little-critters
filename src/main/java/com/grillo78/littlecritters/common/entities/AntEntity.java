@@ -1,18 +1,19 @@
 package com.grillo78.littlecritters.common.entities;
 
+import com.grillo78.littlecritters.common.blocks.ModBlocks;
 import com.grillo78.littlecritters.common.entities.ants.AntTypes;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.LookAtGoal;
+import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.ai.goal.RandomWalkingGoal;
 import net.minecraft.entity.monster.SpiderEntity;
 import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
@@ -23,6 +24,7 @@ import net.minecraft.pathfinding.ClimberPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -37,6 +39,7 @@ import java.util.Random;
 public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditionalSpawnData {
 
     private static final DataParameter<Byte> DATA_FLAGS_ID = EntityDataManager.defineId(SpiderEntity.class, DataSerializers.BYTE);
+//    private AntTypes antType = AntTypes.getRandomType();
     private AntTypes antType = AntTypes.QUEEN;
 
     protected AntEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
@@ -55,7 +58,6 @@ public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditional
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new RandomWalkingGoal(this, 0.3D));
         this.goalSelector.addGoal(1, new LookRandomlyGoal(this));
     }
 
@@ -145,8 +147,12 @@ public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditional
     @Override
     public void readAdditionalSaveData(CompoundNBT compound) {
         super.readAdditionalSaveData(compound);
-        if(compound.contains("antType"))
+        if (compound.contains("antType"))
             antType = AntTypes.valueOf(compound.getString("antType"));
+        if (antType == AntTypes.QUEEN)
+            this.goalSelector.addGoal(0, new CreateAntHouseGoal(this, 0.2D));
+        else
+            this.goalSelector.addGoal(0, new RandomWalkingGoal(this, 0.3D));
     }
 
     @Override
@@ -158,7 +164,7 @@ public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditional
 
     @Override
     public void readSpawnData(PacketBuffer additionalData) {
-        readAdditionalSaveData(additionalData.readAnySizeNbt());
+        readAdditionalSaveData(additionalData.readNbt());
     }
 
     @Override
@@ -170,5 +176,56 @@ public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditional
     @Override
     public CreatureAttribute getMobType() {
         return CreatureAttribute.ARTHROPOD;
+    }
+
+    private static class CreateAntHouseGoal extends Goal {
+
+        private AntEntity ant;
+        private double wantedX = 0;
+        private double wantedY = 0;
+        private double wantedZ = 0;
+        private double speedModifier;
+
+        public CreateAntHouseGoal(AntEntity ant, double speedModifier) {
+            this.ant = ant;
+            this.speedModifier = speedModifier;
+        }
+
+        public boolean canUse() {
+            boolean canUse = false;
+            if (!this.ant.isVehicle()) {
+                Vector3d vector3d = this.getPosition();
+                if (vector3d != null && (this.ant.level.getBlockState(new BlockPos(vector3d).below()).getBlock() == Blocks.GRASS_BLOCK || this.ant.level.getBlockState(new BlockPos(vector3d).below()).getBlock() == Blocks.DIRT || this.ant.level.getBlockState(new BlockPos(vector3d).below()).getBlock() == Blocks.COARSE_DIRT)) {
+                    this.wantedX = vector3d.x;
+                    this.wantedY = vector3d.y;
+                    this.wantedZ = vector3d.z;
+                    canUse = true;
+                }
+            }
+            return canUse;
+        }
+
+        @Nullable
+        protected Vector3d getPosition() {
+            return RandomPositionGenerator.getPos(this.ant, 10, 7);
+        }
+
+        public boolean canContinueToUse() {
+            boolean canContinue = this.ant.position().distanceTo(new Vector3d(wantedX,wantedY,wantedZ))<0.5;
+            if (canContinue){
+                this.ant.level.setBlock(new BlockPos(wantedX,wantedY,wantedZ),ModBlocks.ANT_HOUSE.defaultBlockState(), 3);
+                this.ant.remove();
+            }
+            return canContinue;
+        }
+
+        public void start() {
+            this.ant.getNavigation().moveTo(this.wantedX, this.wantedY, this.wantedZ, this.speedModifier);
+        }
+
+        public void stop() {
+            this.ant.getNavigation().stop();
+            super.stop();
+        }
     }
 }

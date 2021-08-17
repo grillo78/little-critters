@@ -4,11 +4,14 @@ import com.grillo78.littlecritters.client.entities.renderers.AntRendererFactory;
 import com.grillo78.littlecritters.client.entities.renderers.FireFlyRendererFactory;
 import com.grillo78.littlecritters.client.entities.renderers.FlyRendererFactory;
 import com.grillo78.littlecritters.client.entities.renderers.NewSquidRenderer;
+import com.grillo78.littlecritters.common.blocks.ModBlocks;
 import com.grillo78.littlecritters.common.entities.FlyEntity;
 import com.grillo78.littlecritters.common.entities.ModEntities;
 import com.grillo78.littlecritters.common.items.ModItems;
 import com.grillo78.littlecritters.network.PacketHandler;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -49,6 +52,7 @@ public class LittleCritters {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         ModEntities.ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ModBlocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         MinecraftForge.EVENT_BUS.addListener(this::onBiomeLoad);
         MinecraftForge.EVENT_BUS.addListener(this::onEntityJoinWorld);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
@@ -107,6 +111,7 @@ public class LittleCritters {
 
     @OnlyIn(Dist.CLIENT)
     private void doClientStuff(FMLClientSetupEvent event) {
+        RenderTypeLookup.setRenderLayer(ModBlocks.ANT_HOUSE, RenderType.cutoutMipped());
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.FIRE_FLY_ENTITY, new FireFlyRendererFactory());
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.FLY_ENTITY, new FlyRendererFactory());
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ANT_ENTITY, new AntRendererFactory());
