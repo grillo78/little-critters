@@ -1,13 +1,10 @@
 package com.grillo78.littlecritters;
 
-import com.grillo78.littlecritters.client.entities.renderers.AntRendererFactory;
-import com.grillo78.littlecritters.client.entities.renderers.FireFlyRendererFactory;
-import com.grillo78.littlecritters.client.entities.renderers.FlyRendererFactory;
-import com.grillo78.littlecritters.client.entities.renderers.NewSquidRenderer;
+import com.grillo78.littlecritters.client.entities.renderers.*;
 import com.grillo78.littlecritters.common.blocks.ModBlocks;
-import com.grillo78.littlecritters.common.entities.FlyEntity;
 import com.grillo78.littlecritters.common.entities.ModEntities;
 import com.grillo78.littlecritters.common.items.ModItems;
+import com.grillo78.littlecritters.common.tileentities.ModTileEntities;
 import com.grillo78.littlecritters.network.PacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -18,7 +15,6 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.monster.SilverfishEntity;
-import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
@@ -50,6 +46,7 @@ public class LittleCritters {
 
     public LittleCritters() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        ModTileEntities.TILE_ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModEntities.ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModBlocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
@@ -115,6 +112,7 @@ public class LittleCritters {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.FIRE_FLY_ENTITY, new FireFlyRendererFactory());
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.FLY_ENTITY, new FlyRendererFactory());
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ANT_ENTITY, new AntRendererFactory());
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.FALLING_LEAF, new FallingLeafRendererFactory());
         Minecraft.getInstance().getEntityRenderDispatcher().renderers.put(EntityType.SQUID, new NewSquidRenderer(Minecraft.getInstance().getEntityRenderDispatcher()));
     }
 

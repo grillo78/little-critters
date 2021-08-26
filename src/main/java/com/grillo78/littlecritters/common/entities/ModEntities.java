@@ -16,6 +16,7 @@ public class ModEntities {
     public static final EntityType<FireFlyEntity> FIRE_FLY_ENTITY = register("firefly", EntityType.Builder.<FireFlyEntity>of(FireFlyEntity::new, EntityClassification.AMBIENT).sized(0.05F, 0.05F).build(LittleCritters.MOD_ID + ":fire_fly"));
     public static final EntityType<FlyEntity> FLY_ENTITY = register("fly", EntityType.Builder.<FlyEntity>of(FlyEntity::new, EntityClassification.AMBIENT).sized(0.05F, 0.05F).build(LittleCritters.MOD_ID + ":fly"));
     public static final EntityType<AntEntity> ANT_ENTITY = register("ant", EntityType.Builder.<AntEntity>of(AntEntity::new, EntityClassification.AMBIENT).sized(0.05F, 0.05F).build(LittleCritters.MOD_ID + ":fly"));
+    public static final EntityType<FallingLeafEntity> FALLING_LEAF = register("falling_leaf", EntityType.Builder.<FallingLeafEntity>of(FallingLeafEntity::new, EntityClassification.AMBIENT).sized(0.25F, 0.25F).build(LittleCritters.MOD_ID + ":falling_leaf"));
 
     public static void initEntityAttributes() {
         GlobalEntityTypeAttributes.put(FIRE_FLY_ENTITY, FireFlyEntity.setFireFlyAttributes().build());

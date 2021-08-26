@@ -5,7 +5,8 @@
   "refmap": "little_critters.refmap.json",
   "mixins": [
     "MixinMobEntity",
-    "MixinMonsterEntity"
+    "MixinMonsterEntity",
+    "MixinLeavesBlock"
   ],
   "client":[
     "MixinClientEntity"

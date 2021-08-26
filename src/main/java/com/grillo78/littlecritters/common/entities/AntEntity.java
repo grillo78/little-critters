@@ -11,7 +11,6 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.RandomWalkingGoal;
 import net.minecraft.entity.monster.SpiderEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -34,26 +33,32 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Random;
 
 public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditionalSpawnData {
 
     private static final DataParameter<Byte> DATA_FLAGS_ID = EntityDataManager.defineId(SpiderEntity.class, DataSerializers.BYTE);
-//    private AntTypes antType = AntTypes.getRandomType();
     private AntTypes antType = AntTypes.QUEEN;
+    private BlockPos home;
+    private boolean aiInitiated = false;
 
     protected AntEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
         super(type, worldIn);
     }
 
-    protected AntEntity(EntityType<? extends AnimalEntity> type, World worldIn, AntTypes antType) {
+    public AntEntity(EntityType<? extends AnimalEntity> type, World worldIn, AntTypes antType, BlockPos home) {
         this(type, worldIn);
         this.antType = antType;
-    }
+        this.home = home;
 
-    @Override
-    public boolean onClimbable() {
-        return this.isClimbing();
+        if (antType == AntTypes.QUEEN){
+            this.goalSelector.addGoal(0, new CreateAntHouseGoal(this, 0.2D));
+        }
+        if (antType == AntTypes.WORKER){
+            this.goalSelector.addGoal(0, new RecollectLeafFoodGoal(this, 0.2D));
+        }
+        aiInitiated = true;
     }
 
     @Override
@@ -67,10 +72,6 @@ public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditional
         if (!this.level.isClientSide) {
             this.setClimbing(this.horizontalCollision);
         }
-    }
-
-    public boolean isClimbing() {
-        return (this.entityData.get(DATA_FLAGS_ID) & 1) != 0;
     }
 
     public void setClimbing(boolean p_70839_1_) {
@@ -88,11 +89,6 @@ public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditional
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_FLAGS_ID, (byte) 0);
-    }
-
-    @Override
-    protected PathNavigator createNavigation(World p_175447_1_) {
-        return new ClimberPathNavigator(this, p_175447_1_);
     }
 
     public static boolean canSpawn(EntityType<AntEntity> entityTypeIn, IWorld world, SpawnReason reason,
@@ -149,10 +145,14 @@ public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditional
         super.readAdditionalSaveData(compound);
         if (compound.contains("antType"))
             antType = AntTypes.valueOf(compound.getString("antType"));
-        if (antType == AntTypes.QUEEN)
-            this.goalSelector.addGoal(0, new CreateAntHouseGoal(this, 0.2D));
-        else
-            this.goalSelector.addGoal(0, new RandomWalkingGoal(this, 0.3D));
+        if(!aiInitiated){
+            if (antType == AntTypes.QUEEN){
+                this.goalSelector.addGoal(0, new CreateAntHouseGoal(this, 0.2D));
+            }
+            if (antType == AntTypes.WORKER){
+                this.goalSelector.addGoal(0, new RecollectLeafFoodGoal(this, 0.2D));
+            }
+        }
     }
 
     @Override
@@ -211,9 +211,9 @@ public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditional
         }
 
         public boolean canContinueToUse() {
-            boolean canContinue = this.ant.position().distanceTo(new Vector3d(wantedX,wantedY,wantedZ))<0.5;
-            if (canContinue){
-                this.ant.level.setBlock(new BlockPos(wantedX,wantedY,wantedZ),ModBlocks.ANT_HOUSE.defaultBlockState(), 3);
+            boolean canContinue = this.ant.position().distanceTo(new Vector3d(wantedX, wantedY, wantedZ)) < 0.5;
+            if (canContinue) {
+                this.ant.level.setBlock(new BlockPos(wantedX, wantedY, wantedZ), ModBlocks.ANT_HOUSE.defaultBlockState(), 3);
                 this.ant.remove();
             }
             return canContinue;
@@ -226,6 +226,67 @@ public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditional
         public void stop() {
             this.ant.getNavigation().stop();
             super.stop();
+        }
+    }
+
+    private static class RecollectLeafFoodGoal extends Goal {
+
+        private AntEntity ant;
+        private FallingLeafEntity desiredLeaf;
+        private double speedModifier;
+        private boolean goingBack = false;
+
+        public RecollectLeafFoodGoal(AntEntity ant, double speedModifier) {
+            this.ant = ant;
+            this.speedModifier = speedModifier;
+        }
+
+        public boolean canUse() {
+            if (!this.ant.isVehicle()) {
+                List<FallingLeafEntity> entities = ant.level.getLoadedEntitiesOfClass(FallingLeafEntity.class, ant.getBoundingBox().inflate(20, 20, 20), (entity) -> !entity.isInvisible());
+                double lastDistance = 200;
+                for (FallingLeafEntity entity : entities) {
+                    if (entity.distanceTo(ant) < lastDistance) {
+                        desiredLeaf = entity;
+                        lastDistance = entity.distanceTo(ant);
+                    }
+                }
+            }
+            return desiredLeaf != null;
+        }
+
+        public boolean canContinueToUse() {
+            if(!goingBack){
+                if (desiredLeaf != null && desiredLeaf.removed) {
+                    desiredLeaf = null;
+                }else{
+                    double distance = this.ant.position().distanceTo(desiredLeaf.position());
+                    if (distance < 0.01) {
+                        desiredLeaf.startRiding(ant);
+                        goingBack = true;
+                    }
+                }
+            } else {
+
+            }
+            return false;
+        }
+
+        public void start() {
+            Vector3d vector;
+            if (!goingBack) {
+                vector = desiredLeaf.position();
+            } else {
+                vector = new Vector3d(ant.home.getX(), ant.home.getY(), ant.home.getZ());
+            }
+            this.ant.getNavigation().moveTo(vector.x, vector.y, vector.z, this.speedModifier);
+        }
+
+        public void stop() {
+            if(desiredLeaf == null || this.ant.position().distanceTo(desiredLeaf.position()) < 0.01){
+                this.ant.getNavigation().stop();
+                super.stop();
+            }
         }
     }
 }

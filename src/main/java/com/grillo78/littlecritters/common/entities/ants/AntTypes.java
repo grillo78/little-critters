@@ -4,7 +4,7 @@ import java.util.Random;
 
 public enum AntTypes {
 
-    QUEEN, WORKER, MALE;
+    QUEEN, WORKER, MALE, FIGHTER;
 
     public static AntTypes getRandomType(){
         AntTypes type;
