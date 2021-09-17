@@ -261,7 +261,7 @@ public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditional
                     desiredLeaf = null;
                 }else{
                     double distance = this.ant.position().distanceTo(desiredLeaf.position());
-                    if (distance < 0.01) {
+                    if (distance < 0.25) {
                         desiredLeaf.startRiding(ant);
                         goingBack = true;
                     }
@@ -272,20 +272,17 @@ public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditional
             return false;
         }
 
-        public void start() {
+        @Override
+        public void tick() {
+            super.tick();
             Vector3d vector;
-            if (!goingBack) {
-                vector = desiredLeaf.position();
-            } else {
-                vector = new Vector3d(ant.home.getX(), ant.home.getY(), ant.home.getZ());
-            }
-            this.ant.getNavigation().moveTo(vector.x, vector.y, vector.z, this.speedModifier);
-        }
-
-        public void stop() {
-            if(desiredLeaf == null || this.ant.position().distanceTo(desiredLeaf.position()) < 0.01){
-                this.ant.getNavigation().stop();
-                super.stop();
+            if(ant.home != null){
+                if (!goingBack) {
+                    vector = desiredLeaf.position();
+                } else {
+                    vector = new Vector3d(ant.home.getX(), ant.home.getY(), ant.home.getZ());
+                }
+                this.ant.navigation.moveTo(vector.x, vector.y, vector.z, this.speedModifier);
             }
         }
     }
