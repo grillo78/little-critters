@@ -118,20 +118,24 @@ public class LittleCritters {
 
     @OnlyIn(Dist.CLIENT)
     private void onPreEntityRender(RenderLivingEvent.Pre event) {
-        event.getMatrixStack().pushPose();
-        if (event.getEntity().getType() == EntityType.BEE) {
-            event.getRenderer().shadowRadius *= 0.05F;
-            event.getMatrixStack().scale(0.05F, 0.05F, 0.05F);
-        }
-        if (event.getEntity().getType() == EntityType.SILVERFISH) {
-            event.getRenderer().shadowRadius *= 0.05F;
-            event.getMatrixStack().scale(0.1F, 0.1F, 0.1F);
+        if(event.getEntity().getType() == EntityType.BEE || event.getEntity().getType() == EntityType.SILVERFISH) {
+            event.getMatrixStack().pushPose();
+            if (event.getEntity().getType() == EntityType.BEE) {
+                event.getRenderer().shadowRadius *= 0.05F;
+                event.getMatrixStack().scale(0.05F, 0.05F, 0.05F);
+            }
+            if (event.getEntity().getType() == EntityType.SILVERFISH) {
+                event.getRenderer().shadowRadius *= 0.05F;
+                event.getMatrixStack().scale(0.1F, 0.1F, 0.1F);
+            }
         }
     }
 
     @OnlyIn(Dist.CLIENT)
     private void onPostEntityRender(RenderLivingEvent.Post event) {
-        event.getMatrixStack().popPose();
+        if(event.getEntity().getType() == EntityType.BEE || event.getEntity().getType() == EntityType.SILVERFISH) {
+            event.getMatrixStack().popPose();
+        }
     }
 
 

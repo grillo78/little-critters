@@ -1,6 +1,5 @@
 package com.grillo78.littlecritters.common.entities;
 
-import com.grillo78.littlecritters.client.util.HypherionLightingCoreUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -53,9 +52,6 @@ public class FireFlyEntity extends AnimalEntity implements IFlyingAnimal {
 
     public FireFlyEntity(EntityType<? extends FireFlyEntity> type, World worldIn) {
         super(type, worldIn);
-        if (ModList.get().isLoaded("hypcore")) {
-            HypherionLightingCoreUtil.registerLightProvider(this);
-        }
         this.moveControl = new FlyingMovementController(this, 20, true);
         this.lookControl = new LookController(this);
         this.setPathfindingMalus(PathNodeType.DANGER_FIRE, -1.0F);

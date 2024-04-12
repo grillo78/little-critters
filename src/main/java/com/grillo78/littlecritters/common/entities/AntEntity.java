@@ -2,6 +2,7 @@ package com.grillo78.littlecritters.common.entities;
 
 import com.grillo78.littlecritters.common.blocks.ModBlocks;
 import com.grillo78.littlecritters.common.entities.ants.AntTypes;
+import com.grillo78.littlecritters.common.tileentities.AntHouseTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -11,17 +12,18 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
+import net.minecraft.entity.ai.goal.RandomWalkingGoal;
 import net.minecraft.entity.monster.SpiderEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.pathfinding.ClimberPathNavigator;
-import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorld;
@@ -43,11 +45,11 @@ public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditional
     private BlockPos home;
     private boolean aiInitiated = false;
 
-    protected AntEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
+    protected AntEntity(EntityType<? extends SpiderEntity> type, World worldIn) {
         super(type, worldIn);
     }
 
-    public AntEntity(EntityType<? extends AnimalEntity> type, World worldIn, AntTypes antType, BlockPos home) {
+    public AntEntity(EntityType<? extends SpiderEntity> type, World worldIn, AntTypes antType, BlockPos home) {
         this(type, worldIn);
         this.antType = antType;
         this.home = home;
@@ -58,6 +60,7 @@ public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditional
         if (antType == AntTypes.WORKER){
             this.goalSelector.addGoal(0, new RecollectLeafFoodGoal(this, 0.2D));
         }
+        this.goalSelector.addGoal(0, new RandomWalkingGoal(this, 0.2D));
         aiInitiated = true;
     }
 
@@ -66,24 +69,6 @@ public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditional
         this.goalSelector.addGoal(1, new LookRandomlyGoal(this));
     }
 
-    @Override
-    public void tick() {
-        super.tick();
-        if (!this.level.isClientSide) {
-            this.setClimbing(this.horizontalCollision);
-        }
-    }
-
-    public void setClimbing(boolean p_70839_1_) {
-        byte b0 = this.entityData.get(DATA_FLAGS_ID);
-        if (p_70839_1_) {
-            b0 = (byte) (b0 | 1);
-        } else {
-            b0 = (byte) (b0 & -2);
-        }
-
-        this.entityData.set(DATA_FLAGS_ID, b0);
-    }
 
     @Override
     protected void defineSynchedData() {
@@ -108,12 +93,6 @@ public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditional
         return antType;
     }
 
-    @Nullable
-    @Override
-    public AgeableEntity getBreedOffspring(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
-        return null;
-    }
-
     @OnlyIn(Dist.CLIENT)
     @Override
     public boolean shouldRenderAtSqrDistance(double distance) {
@@ -133,6 +112,11 @@ public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditional
     }
 
     @Override
+    protected SoundEvent getAmbientSound() {
+        return null;
+    }
+
+    @Override
     public boolean hurt(DamageSource dmg, float i) {
         if (dmg == DamageSource.IN_WALL) {
             return false;
@@ -145,6 +129,8 @@ public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditional
         super.readAdditionalSaveData(compound);
         if (compound.contains("antType"))
             antType = AntTypes.valueOf(compound.getString("antType"));
+        if(compound.contains("home"))
+            home = NBTUtil.readBlockPos(compound.getCompound("home"));
         if(!aiInitiated){
             if (antType == AntTypes.QUEEN){
                 this.goalSelector.addGoal(0, new CreateAntHouseGoal(this, 0.2D));
@@ -163,6 +149,14 @@ public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditional
     }
 
     @Override
+    public void remove() {
+        if(antType == AntTypes.WORKER && this.home != null){
+            ((AntHouseTileEntity)this.level.getBlockEntity(this.home)).removeWorkerOutside();
+        }
+        super.remove();
+    }
+
+    @Override
     public void readSpawnData(PacketBuffer additionalData) {
         readAdditionalSaveData(additionalData.readNbt());
     }
@@ -171,6 +165,22 @@ public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditional
     public void addAdditionalSaveData(CompoundNBT compound) {
         super.addAdditionalSaveData(compound);
         compound.putString("antType", antType.name());
+        if (home != null){
+            compound.put("home", NBTUtil.writeBlockPos(this.home));
+        }
+    }
+
+    @Override
+    protected void tickDeath() {
+        ++this.deathTime;
+        if (this.deathTime == 20) {
+            this.remove();
+        }
+    }
+
+    @Override
+    protected void jumpFromGround() {
+
     }
 
     @Override
@@ -257,7 +267,7 @@ public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditional
 
         public boolean canContinueToUse() {
             if(!goingBack){
-                if (desiredLeaf != null && desiredLeaf.removed) {
+                if (desiredLeaf != null && !desiredLeaf.isAlive()) {
                     desiredLeaf = null;
                 }else{
                     double distance = this.ant.position().distanceTo(desiredLeaf.position());
@@ -266,8 +276,6 @@ public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditional
                         goingBack = true;
                     }
                 }
-            } else {
-
             }
             return false;
         }
@@ -275,14 +283,25 @@ public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditional
         @Override
         public void tick() {
             super.tick();
-            Vector3d vector;
+            Vector3d vector = null;
             if(ant.home != null){
                 if (!goingBack) {
-                    vector = desiredLeaf.position();
+                    if(desiredLeaf.isAlive())
+                        vector = desiredLeaf.position();
                 } else {
-                    vector = new Vector3d(ant.home.getX(), ant.home.getY(), ant.home.getZ());
+                    vector = new Vector3d(ant.home.getX()+0.5, ant.home.getY()+0.25, ant.home.getZ()+0.5);
                 }
-                this.ant.navigation.moveTo(vector.x, vector.y, vector.z, this.speedModifier);
+                if(vector != null){
+                    ant.navigation.moveTo(vector.x, vector.y, vector.z, this.speedModifier);
+                    if(!this.ant.navigation.isInProgress() && !goingBack){
+                        this.ant.moveControl.setWantedPosition(vector.x, vector.y, vector.z, this.speedModifier);
+                    }
+                    if(goingBack && this.ant.navigation.isDone() && this.ant.level.getBlockEntity(this.ant.home) instanceof AntHouseTileEntity){
+                        ((AntHouseTileEntity)this.ant.level.getBlockEntity(this.ant.home)).addFood();
+                        ((AntHouseTileEntity)this.ant.level.getBlockEntity(this.ant.home)).addWorker();
+                        this.ant.kill();
+                    }
+                }
             }
         }
     }
