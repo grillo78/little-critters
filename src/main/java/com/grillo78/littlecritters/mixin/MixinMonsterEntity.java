@@ -12,7 +12,9 @@ public abstract class MixinMonsterEntity {
 
     @Inject(method = "shouldDespawnInPeaceful", at = @At("RETURN"), cancellable = true)
     public void isInRangeToRenderDist(CallbackInfoReturnable callbackInfoReturnable) {
-        if (((MonsterEntity)(Object) this).getType() == EntityType.SILVERFISH) {
+        if (((MonsterEntity)(Object) this).getType() == EntityType.SILVERFISH
+                || ((MonsterEntity)(Object) this).getType() == EntityType.SPIDER
+                || ((MonsterEntity)(Object) this).getType() == EntityType.CAVE_SPIDER) {
             callbackInfoReturnable.setReturnValue(false);
         }
     }

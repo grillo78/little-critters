@@ -69,6 +69,10 @@ public class AntEntity extends ClimbingAnimalEntity implements IEntityAdditional
         this.goalSelector.addGoal(1, new LookRandomlyGoal(this));
     }
 
+    @Override
+    protected boolean shouldDespawnInPeaceful() {
+        return false;
+    }
 
     @Override
     protected void defineSynchedData() {

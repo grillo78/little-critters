@@ -15,6 +15,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.monster.SilverfishEntity;
+import net.minecraft.entity.monster.SpiderEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
@@ -66,6 +67,8 @@ public class LittleCritters {
         EntityType.BEE.dimensions = EntitySize.scalable(0.1F, 0.1F);
         EntityType.SILVERFISH.dimensions = EntitySize.scalable(0.1F, 0.1F);
         EntityType.SQUID.dimensions = EntitySize.scalable(0.5F, 0.5F);
+        EntityType.SPIDER.dimensions = EntitySize.scalable(0.1F, 0.1F);
+        EntityType.CAVE_SPIDER.dimensions = EntitySize.scalable(0.2F, 0.2F);
         event.enqueueWork(() -> {
             ModEntities.initEntityAttributes();
             ModEntities.registerSpawnPlacement();
@@ -84,6 +87,9 @@ public class LittleCritters {
             if (event.getEntity().getType() == EntityType.BEE || event.getEntity().getType() == EntityType.SILVERFISH || event.getEntity().getType() == EntityType.SQUID) {
                 if (event.getEntity().getType() == EntityType.SILVERFISH) {
                     ((SilverfishEntity) event.getEntity()).targetSelector.availableGoals.clear();
+                }
+                if (event.getEntity().getType() == EntityType.SPIDER||event.getEntity().getType() == EntityType.CAVE_SPIDER) {
+                    ((SpiderEntity) event.getEntity()).targetSelector.availableGoals.clear();
                 }
                 setAttribute(((LivingEntity) event.getEntity()), "custom_max_health", Attributes.MAX_HEALTH, UUID.fromString("cbc6c4d8-03e2-4e7e-bcdf-fa9266f33195"), -(((CreatureEntity) event.getEntity()).getMaxHealth() - 0.5), AttributeModifier.Operation.ADDITION);
                 if (((CreatureEntity) event.getEntity()).getHealth() > 1)
@@ -118,7 +124,10 @@ public class LittleCritters {
 
     @OnlyIn(Dist.CLIENT)
     private void onPreEntityRender(RenderLivingEvent.Pre event) {
-        if(event.getEntity().getType() == EntityType.BEE || event.getEntity().getType() == EntityType.SILVERFISH) {
+        if(event.getEntity().getType() == EntityType.BEE
+                || event.getEntity().getType() == EntityType.SILVERFISH
+                || event.getEntity().getType() == EntityType.SPIDER
+                || event.getEntity().getType() == EntityType.CAVE_SPIDER) {
             event.getMatrixStack().pushPose();
             if (event.getEntity().getType() == EntityType.BEE) {
                 event.getRenderer().shadowRadius *= 0.05F;
@@ -128,12 +137,23 @@ public class LittleCritters {
                 event.getRenderer().shadowRadius *= 0.05F;
                 event.getMatrixStack().scale(0.1F, 0.1F, 0.1F);
             }
+            if (event.getEntity().getType() == EntityType.CAVE_SPIDER) {
+                event.getRenderer().shadowRadius *= 0.05F;
+                event.getMatrixStack().scale(0.2F, 0.2F, 0.2F);
+            }
+            if (event.getEntity().getType() == EntityType.SPIDER) {
+                event.getRenderer().shadowRadius *= 0.05F;
+                event.getMatrixStack().scale(0.1F, 0.1F, 0.1F);
+            }
         }
     }
 
     @OnlyIn(Dist.CLIENT)
     private void onPostEntityRender(RenderLivingEvent.Post event) {
-        if(event.getEntity().getType() == EntityType.BEE || event.getEntity().getType() == EntityType.SILVERFISH) {
+        if(event.getEntity().getType() == EntityType.BEE
+                || event.getEntity().getType() == EntityType.SILVERFISH
+                || event.getEntity().getType() == EntityType.SPIDER
+                || event.getEntity().getType() == EntityType.CAVE_SPIDER) {
             event.getMatrixStack().popPose();
         }
     }
