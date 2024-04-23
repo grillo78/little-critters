@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "# #",
+    " # ",
+    "   "
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:wheat"
+    }
+  },
+  "result": {
+    "item": "little_critters:chicken_nest",
+    "count": 1
+  }
+}
