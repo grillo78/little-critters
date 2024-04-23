@@ -3,6 +3,7 @@ package com.grillo78.littlecritters;
 import com.grillo78.littlecritters.client.entities.renderers.*;
 import com.grillo78.littlecritters.common.blocks.ModBlocks;
 import com.grillo78.littlecritters.common.entities.ModEntities;
+import com.grillo78.littlecritters.common.entities.goal.PlaceEgg;
 import com.grillo78.littlecritters.common.items.ModItems;
 import com.grillo78.littlecritters.common.tileentities.ModTileEntities;
 import com.grillo78.littlecritters.network.PacketHandler;
@@ -16,6 +17,7 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.monster.SilverfishEntity;
 import net.minecraft.entity.monster.SpiderEntity;
+import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
@@ -95,6 +97,9 @@ public class LittleCritters {
                 if (((CreatureEntity) event.getEntity()).getHealth() > 1)
                     ((CreatureEntity) event.getEntity()).setHealth(1F);
             }
+            if (event.getEntity().getType() == EntityType.CHICKEN) {
+                ((ChickenEntity) event.getEntity()).goalSelector.addGoal(1, new PlaceEgg((ChickenEntity) event.getEntity()));
+            }
         }
     }
 
@@ -115,6 +120,7 @@ public class LittleCritters {
     @OnlyIn(Dist.CLIENT)
     private void doClientStuff(FMLClientSetupEvent event) {
         RenderTypeLookup.setRenderLayer(ModBlocks.ANT_HOUSE, RenderType.cutoutMipped());
+        RenderTypeLookup.setRenderLayer(ModBlocks.CHICKEN_NEST, RenderType.cutoutMipped());
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.FIRE_FLY_ENTITY, new FireFlyRendererFactory());
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.FLY_ENTITY, new FlyRendererFactory());
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ANT_ENTITY, new AntRendererFactory());

@@ -1,6 +1,8 @@
 {
   "entity.little_critters.firefly": "Firefly",
+  "entity.little_critters.ant": "Ant",
   "item.little_critters.firefly_spawn_egg": "Firefly Spawn Egg",
   "item.little_critters.bug_net": "Bugs Net",
-  "item.little_critters.animal": "Caught Animal"
+  "item.little_critters.animal": "Caught Animal",
+  "item.little_critters.chicken_nest": "Chicken Nest"
 }

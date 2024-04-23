@@ -19,8 +19,8 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 
-version = '0.0.2'
-group = 'com.grillo78.littlecritters' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+version = '0.0.2.1'
+group = 'grillo78' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'little_critters'
 
 
@@ -105,7 +105,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.5-36.2.8'
+    minecraft 'net.minecraftforge:forge:1.16.5-36.2.42'
     annotationProcessor 'org.spongepowered:mixin:0.8.2:processor'
     implementation fg.deobf('curse.maven:neat-238372:3182258')
 
@@ -140,11 +140,16 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             artifact jar
+            artifactId = "little_critters"
         }
     }
     repositories {
         maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
+            url = 'https://maven.fdnetworks.org/releases'
+            credentials {
+                username = System.getenv("fdnetworkUser")
+                password = System.getenv("fdnetworkPassword")
+            }
         }
     }
 }
